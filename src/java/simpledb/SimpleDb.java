@@ -5,6 +5,12 @@ import java.io.*;
 public class SimpleDb {
     public static void main (String args[])
             throws DbException, TransactionAbortedException, IOException {
+        // avoid args is empty. 
+        if(args.length == 0){
+          System.out.println("Feed a command!!!");
+	  return;
+        }
+
         // convert a file
         if(args[0].equals("convert")) {
         try {
@@ -51,6 +57,8 @@ public class SimpleDb {
                 throw new RuntimeException(e);
         }
         } else if (args[0].equals("print")) {
+	    // check the number of arguments
+            Utility.checkArgs(args, 2, 3, "Unexpected number of arguments!\nTerminating...");
             File tableFile = new File(args[1]);
             int columns = Integer.parseInt(args[2]);
             DbFile table = Utility.openHeapFile(columns, tableFile);

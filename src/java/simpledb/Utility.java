@@ -153,5 +153,19 @@ public class Utility {
         }
         return out;
     }
+    /** Verify the length of args.(Later supplement)
+     *  If the length of args is between bot and top, do nothing. Output 
+     *  a message msg and exit, otherwise. 
+     * @param args the checking argument. 
+     * @param bot the argument is at least as large as bot. 
+     * @param top the argument is at most as large as top.
+     * @param msg the output message.
+     */
+    public static void checkArgs(String[] args, int bot, int top, String msg){
+      if(args.length < bot || args.length > top){
+        System.err.println(msg);
+        System.exit(1);
+      }
+    }
 }
 
