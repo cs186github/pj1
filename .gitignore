@@ -9,3 +9,6 @@
 
 # ignore log temp file
 msg.tmp
+
+# ignore vim temp file.
+*.swp

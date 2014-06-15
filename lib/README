@@ -1,24 +1,44 @@
 junit-4.5.jar
+* For repeatable tests. It uses an xUnit architecture framework.
 * http://junit.sourceforge.net/
 * CPL (free for all use)
 
 zql.jar
+* sql paser written in java.
 * http://www.gibello.com/code/zql/
 * Free for non-commercial use
 
 JLine
+* JLine is a Java library for handling console input. It is similar 
+* in functionality to BSD editline and GNU readline. People familiar 
+* with the readline/editline capabilities for modern shells (such as 
+* bash and tcsh) will find most of the command editing features of 
+* JLine to be familiar.
 * http://jline.sourceforge.net/
 * BSD (free for all use)
 
 mina-core-2.0.4.jar
 mina-filter-compression-2.0.4.jar
+* Apache MINA is a network application framework which helps users 
+* develop high performance and high scalability network applications 
+* easily. It provides an abstract event-driven asynchronous API over 
+* various transports such as TCP/IP and UDP/IP via Java NIO.
 * http://mina.apache.org/
 * Apache License v2.0 (free for all use)
 
 slf4j-api-1.6.1.jar
+* The Simple Logging Facade for Java (SLF4J) serves as a simple facade 
+* or abstraction for various logging frameworks, such as java.util.logging, 
+* logback and log4j. SLF4J allows the end-user to plug in the desired logging 
+* framework at deployment time. Note that SLF4J-enabling your library/application 
+* implies the addition of only a single mandatory dependency, namely slf4j-api-1.7.7.jar.
 * http://www.slf4j.org/license.html
 * MIT license (free for all use)
 
 jzlib-1.0.7.jar
+* JZlib is a re-implementation of zlib in pure Java.
+* The first and final aim for hacking this stuff is to add the packet 
+* compression support to pure Java SSH systems.
 * http://www.jcraft.com/jzlib/
 * BSD (free for all use)
+* Source code is available on github.
