@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="simpledb" default="dist">
-    <property name="src" location="src"/>
+    <!--A property is like a variable definition that used in 
+        the project building.-->
+    <!--'location' is the file path.-->
+    <property name="src" location="src"/> 
     <property name="testd" location="test"/>
 
     <property name="build" location="bin"/>
@@ -12,6 +15,7 @@
     <property name="doc" location="javadoc"/>
     <property name="dist" location="dist"/>
     <property name="jarfile" location="${dist}/${ant.project.name}.jar"/>
+    <!--'value' is the value of the property-->
     <property name="compile.debug" value="true"/>
     <property name="test.reports" location="testreport"/>
 

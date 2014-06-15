@@ -12,3 +12,6 @@ msg.tmp
 
 # ignore vim temp file.
 *.swp
+
+# ignore others directory
+/others
