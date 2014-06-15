@@ -29,6 +29,20 @@ public class TupleDesc implements Serializable {
             this.fieldName = n;
             this.fieldType = t;
         }
+        //This constructor should nerver be used except runing test.
+        public TDItem(){
+          this(INT_TYPE, null);
+        }
+
+        /**
+         * Verify whether two TDItem are equal.
+         * If equal, return true, false otherwise. If and only if 
+         * the two TDItem have exactly the same pattern, we set it true.
+         * */
+        public static boolean equals(TDItem tdf, TDItem tds){
+          return (tdf.fieldName.compareTo(tds.fieldName) == 0 &&
+                  tdf.fieldType.compareTo(tds.fieldType) == 0) 
+        }
 
         public String toString() {
             return fieldName + "(" + fieldType + ")";
@@ -42,10 +56,14 @@ public class TupleDesc implements Serializable {
      * */
     public Iterator<TDItem> iterator() {
         // some code goes here
-        return null;
+        return new IDItem();
     }
 
     private static final long serialVersionUID = 1L;
+    /**
+     * The number of fields of this tuple.
+     * */
+    private int fieldNum; 
 
     /**
      * Create a new TupleDesc with typeAr.length fields with fields of the
@@ -60,6 +78,7 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
         // some code goes here
+        
     }
 
     /**
@@ -79,7 +98,7 @@ public class TupleDesc implements Serializable {
      */
     public int numFields() {
         // some code goes here
-        return 0;
+        return this.fieldNum;
     }
 
     /**
@@ -93,7 +112,16 @@ public class TupleDesc implements Serializable {
      */
     public String getFieldName(int i) throws NoSuchElementException {
         // some code goes here
-        return null;
+        if(i < fieldNum && i >= 0){
+          Iterator<TDItem> iter = iterator();
+          while(i-- > 0){
+            // here may throw an exception.
+            iter.getNext();
+          } 
+          return (iter.getNext()).fieldName;
+        } else{
+          throw new NoSuchElementException("invalid index")
+        }
     }
 
     /**
@@ -108,7 +136,16 @@ public class TupleDesc implements Serializable {
      */
     public Type getFieldType(int i) throws NoSuchElementException {
         // some code goes here
-        return null;
+        if(i < fieldNum && i >= 0){
+          Iterator<TDItem> iter = iterator();
+          while(i-- > 0){
+            // here may throw an exception.
+            iter.getNext();
+          } 
+          return (iter.getNext()).fieldType;
+        } else{
+          throw new NoSuchElementException("invalid index")
+        }
     }
 
     /**
