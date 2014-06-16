@@ -1,0 +1,10 @@
+ Part I: Tuple related.
+ 1. TupleDesc: At first, we use a list to maintain the contents of a tuple description.
+ We choose this for three reasons: 1> list is very simple. 2> we have no idea
+ how to get a high performance container to hold the position. 3> we use it 
+ temprarily, when we find a well satisfied one, we will replace it. Secondly, we assume
+ the two TupleDesc is the same if they have the same Item, no matter what order they are
+ placed in the container. We also assume two Item is the same if and only if
+ two Items are exactly have the same field name and the same field type. Thirdly,
+ for performance reason, there is a possiblity that the merge method need to be 
+ improved later.
