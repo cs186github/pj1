@@ -39,9 +39,9 @@ public class TupleDesc implements Serializable {
          * If equal, return true, false otherwise. If and only if 
          * the two TDItem have exactly the same pattern, we set it true.
          * */
-        public static boolean equals(TDItem tdf, TDItem tds){
-          return (tdf.fieldName.compareTo(tds.fieldName) == 0 &&
-                  tdf.fieldType.compareTo(tds.fieldType) == 0) 
+        public static boolean equals(TDItem td){
+          return (this.fieldName.compareTo(td.fieldName) == 0 &&
+                  this.fieldType.compareTo(td.fieldType) == 0) 
         }
 
         public String toString() {
@@ -116,9 +116,9 @@ public class TupleDesc implements Serializable {
           Iterator<TDItem> iter = iterator();
           while(i-- > 0){
             // here may throw an exception.
-            iter.getNext();
+            iter.next();
           } 
-          return (iter.getNext()).fieldName;
+          return (iter.next()).fieldName;
         } else{
           throw new NoSuchElementException("invalid index")
         }
@@ -140,9 +140,9 @@ public class TupleDesc implements Serializable {
           Iterator<TDItem> iter = iterator();
           while(i-- > 0){
             // here may throw an exception.
-            iter.getNext();
+            iter.next();
           } 
-          return (iter.getNext()).fieldType;
+          return (iter.next()).fieldType;
         } else{
           throw new NoSuchElementException("invalid index")
         }
@@ -159,7 +159,16 @@ public class TupleDesc implements Serializable {
      */
     public int fieldNameToIndex(String name) throws NoSuchElementException {
         // some code goes here
-        return 0;
+        TDItem tmp = null;
+        int i = 0;
+        Iterator<TDItem> iter = iterator();
+        while(iter.hasNext()){
+          tmp = iter.next();
+          if(tmp.fieldName.compareTo(name) == 0){
+            return i; 
+          } 
+          ++i; 
+        } 
     }
 
     /**
@@ -168,7 +177,14 @@ public class TupleDesc implements Serializable {
      */
     public int getSize() {
         // some code goes here
-        return 0;
+        TDItem tmp = null;
+        int size = 0;
+        Iterator<TDItem> iter = iterator();
+        while(iter.hasNext()){
+          tmp = iter.next();
+          size += tmp.fieldType.getLen();
+        }  
+        return size;
     }
 
     /**
@@ -197,6 +213,18 @@ public class TupleDesc implements Serializable {
      */
     public boolean equals(Object o) {
         // some code goes here
+        if(this.fieldNum == tmp.fieldNum){
+          TDItem tdif, tdis;
+          TupleDesc tud = (TupelDesc) o;
+          Iterator<TDItem> iterf = iterator();
+          Iterator<TDItem> iters = tud.iterator();
+          while(iterf.hasNext() && iters.hasNext()){
+            if(!iterf.next().equals(iters.next())){
+              return false;
+            }
+          }
+          return true;
+        }
         return false;
     }
 
@@ -215,6 +243,17 @@ public class TupleDesc implements Serializable {
      */
     public String toString() {
         // some code goes here
-        return "";
+        StringBuilder result = new StringBuilder();
+        TDItem tdi = null;
+        int index = 0;
+        Iterator<TDItem> iter = iterator();
+        while(iter.hasNext()){
+          tdi = iter.next();
+          result.append(String.format("%s[%d](%s[%d]),",
+                        tdi.fieldType, index, tdi.fieldName, index));
+          ++index; 
+        } 
+        result.delete(result.length()-1);
+        return result;
     }
 }
