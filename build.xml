@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="simpledb" default="dist">
+    <!--'name' is the name of the project. 'default' is the default
+        target if there is no target is defined. 'basedir' is the 
+        base directory the building based.-->
+    <!--There may be a 'description' element to describle the project-->
+    <!--Target is a series of tasks to be performed. A target 'description'
+        can be listed by 'ant -projecthelp' command.-->
     <!--A property is like a variable definition that used in 
-        the project building.-->
+        the project building. It could be used in a task as
+        an attribute like ${property1}-->
     <!--'location' is the file path.-->
     <property name="src" location="src"/> 
     <property name="testd" location="test"/>
@@ -20,7 +27,13 @@
     <property name="test.reports" location="testreport"/>
 
     <property name="sourceversion" value="1.5"/>
-
+    
+    <!--this is a path used in this file. To use it, just use it 'id' to
+     get it.-->
+    <!--Any project element can be assigned an identifier useing its 'id'
+     attribute. In most cases the element cn subsequently be referenced
+     by specifying the 'refid' attribute on an elemennt of the same type.
+    -->
     <path id="classpath.base">
         <pathelement location="${build.src}"/>
         <pathelement location="${lib}/zql.jar"/>
@@ -45,9 +58,15 @@
             <mkdir dir="@{destdir}"/>
             <!-- avoids needing ant clean when changing interfaces -->
             <depend srcdir="${srcdir}" destdir="${destdir}" cache="${depcache}"/>
+            <!--'srcdir' is the location the .java files. 'destdir' is the
+             location to store the class files. 'includeAntRuntime' is about
+             whether to use the ant run-time libraries, being better set 'false'.
+             -->
             <javac srcdir="@{srcdir}" destdir="@{destdir}" includeAntRuntime="no"
                     debug="${compile.debug}" source="${sourceversion}">
                 <compilerarg value="-Xlint:unchecked" />
+                <!--enable 'unchecked' warning-->
+                <!--'-Xlint' to enable all recommended warnings.-->
                 <!--<compilerarg value="-Xlint:deprecation" />-->
                 <compileoptions/>
             </javac>
