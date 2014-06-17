@@ -7,4 +7,5 @@
  placed in the container. We also assume two Item is the same if and only if
  two Items are exactly have the same field name and the same field type. Thirdly,
  for performance reason, there is a possiblity that the merge method need to be 
- improved later.
+ improved later. Fourthly, we use a "null" name to spacify an empty fieldName. It really
+ simplifies the code.

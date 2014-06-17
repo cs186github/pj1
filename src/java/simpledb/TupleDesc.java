@@ -3,6 +3,7 @@ package simpledb;
 import java.io.Serializable;
 import java.util.*;
 
+      
 /**
  * TupleDesc describes the schema of a tuple.
  */
@@ -10,6 +11,10 @@ public class TupleDesc implements Serializable {
 
     /**
      * A help class to facilitate organizing the information of each field
+     *
+     * Do not try to give fieldName a null reference, that will give a chance to
+     * throw a java.lang.NUllPointerException while you do some operations on this
+     * object. We use a "null" string to specify an empty fieldName.`
      * */
     public static class TDItem implements Serializable {
 
@@ -31,7 +36,7 @@ public class TupleDesc implements Serializable {
         }
         //This constructor should nerver be used except runing test.
         public TDItem(){
-          this(INT_TYPE, null);
+          this(Type.INT_TYPE, "null");
         }
 
         /**
@@ -39,9 +44,16 @@ public class TupleDesc implements Serializable {
          * If equal, return true, false otherwise. If and only if 
          * the two TDItem have exactly the same pattern, we set it true.
          * */
-        public static boolean equals(TDItem td){
+        public boolean equals(TDItem td){
+          //if(this.fieldNmae == null){
+          // return (this.fieldName == td.fieldName &&
+          //         this.fieldType == td.fieldType);
+          //} else{
+          //  return (this.fieldName.compareTo(td.fieldName) == 0 &&
+          //          this.fieldType == td.fieldType);
+          //}
           return (this.fieldName.compareTo(td.fieldName) == 0 &&
-                  this.fieldType.compareTo(td.fieldType) == 0) 
+                  this.fieldType == td.fieldType);
         }
 
         public String toString() {
@@ -56,18 +68,32 @@ public class TupleDesc implements Serializable {
      * */
     public Iterator<TDItem> iterator() {
         // some code goes here
-        return new IDItem();
+        return repo.listIterator(iterBase); 
     }
 
     private static final long serialVersionUID = 1L;
+
     /**
      * The number of fields of this tuple.
      * */
     private int fieldNum; 
 
+    // A internal data structure to hold the field decription
+    // of a Tuple.
+    private LinkedList<TDItem> repo;
+
+    // Starting index of iterator.
+    private final static int iterBase = 0;
+
+
     /**
      * Create a new TupleDesc with typeAr.length fields with fields of the
      * specified types, with associated named fields.
+     *
+     * When the the length of typeAr and the length of fieldAr does not
+     * match, we always make sure all of the typeAr is in the TupleDesc,
+     * not the fieldAr. We will put a 'null' as a field name if no fieldAr
+     * can feed it.
      * 
      * @param typeAr
      *            array specifying the number of and types of fields in this
@@ -78,7 +104,15 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
         // some code goes here
-        
+        repo = new LinkedList<TDItem>(); 
+        fieldNum = typeAr.length;
+        for(int i = 0; i < typeAr.length; i++){
+          if(i < fieldAr.length){
+            repo.add(new TDItem(typeAr[i], fieldAr[i]));
+          } else{
+            repo.add(new TDItem(typeAr[i], null));
+          } 
+        }
     }
 
     /**
@@ -91,6 +125,7 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr) {
         // some code goes here
+        this(typeAr, new String[1]);
     }
 
     /**
@@ -120,7 +155,7 @@ public class TupleDesc implements Serializable {
           } 
           return (iter.next()).fieldName;
         } else{
-          throw new NoSuchElementException("invalid index")
+          throw new NoSuchElementException("invalid index");
         }
     }
 
@@ -144,7 +179,7 @@ public class TupleDesc implements Serializable {
           } 
           return (iter.next()).fieldType;
         } else{
-          throw new NoSuchElementException("invalid index")
+          throw new NoSuchElementException("invalid index");
         }
     }
 
@@ -169,6 +204,7 @@ public class TupleDesc implements Serializable {
           } 
           ++i; 
         } 
+        throw new NoSuchElementException("no such named feild");
     }
 
     /**
@@ -199,7 +235,10 @@ public class TupleDesc implements Serializable {
      */
     public static TupleDesc merge(TupleDesc td1, TupleDesc td2) {
         // some code goes here
-        return null;
+        if(!td1.repo.addAll(td2.repo)){
+          System.err.println("Warning: merge failed.");
+        } 
+        return td1;
     }
 
     /**
@@ -213,9 +252,9 @@ public class TupleDesc implements Serializable {
      */
     public boolean equals(Object o) {
         // some code goes here
-        if(this.fieldNum == tmp.fieldNum){
+        TupleDesc tud = (TupleDesc) o;
+        if(this.fieldNum == tud.fieldNum){
           TDItem tdif, tdis;
-          TupleDesc tud = (TupelDesc) o;
           Iterator<TDItem> iterf = iterator();
           Iterator<TDItem> iters = tud.iterator();
           while(iterf.hasNext() && iters.hasNext()){
@@ -253,7 +292,7 @@ public class TupleDesc implements Serializable {
                         tdi.fieldType, index, tdi.fieldName, index));
           ++index; 
         } 
-        result.delete(result.length()-1);
-        return result;
+        result.delete(result.length()-1, result.length());
+        return result.toString();
     }
 }

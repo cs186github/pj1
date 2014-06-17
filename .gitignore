@@ -15,3 +15,5 @@ msg.tmp
 
 # ignore others directory
 /others
+
+/test_result
