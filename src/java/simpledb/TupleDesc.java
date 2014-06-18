@@ -45,15 +45,15 @@ public class TupleDesc implements Serializable {
          * the two TDItem have exactly the same pattern, we set it true.
          * */
         public boolean equals(TDItem td){
-          //if(this.fieldNmae == null){
-          // return (this.fieldName == td.fieldName &&
-          //         this.fieldType == td.fieldType);
-          //} else{
-          //  return (this.fieldName.compareTo(td.fieldName) == 0 &&
-          //          this.fieldType == td.fieldType);
-          //}
-          return (this.fieldName.compareTo(td.fieldName) == 0 &&
-                  this.fieldType == td.fieldType);
+          if(this.fieldName == null){
+            return (this.fieldName == td.fieldName &&
+                   this.fieldType == td.fieldType);
+          } else{
+            return (this.fieldName.compareTo(td.fieldName) == 0 &&
+                    this.fieldType == td.fieldType);
+          }
+          //return (this.fieldName.compareTo(td.fieldName) == 0 &&
+          //        this.fieldType == td.fieldType);
         }
 
         public String toString() {
@@ -105,7 +105,6 @@ public class TupleDesc implements Serializable {
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
         // some code goes here
         repo = new LinkedList<TDItem>(); 
-        fieldNum = typeAr.length;
         for(int i = 0; i < typeAr.length; i++){
           if(i < fieldAr.length){
             repo.add(new TDItem(typeAr[i], fieldAr[i]));
@@ -113,6 +112,7 @@ public class TupleDesc implements Serializable {
             repo.add(new TDItem(typeAr[i], null));
           } 
         }
+        fieldNum = typeAr.length;
     }
 
     /**
@@ -125,6 +125,7 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr) {
         // some code goes here
+        
         this(typeAr, new String[1]);
     }
 
@@ -199,8 +200,12 @@ public class TupleDesc implements Serializable {
         Iterator<TDItem> iter = iterator();
         while(iter.hasNext()){
           tmp = iter.next();
-          if(tmp.fieldName.compareTo(name) == 0){
-            return i; 
+          if(tmp.fieldName == null){
+            if(name == null)
+              {return i;}
+          } else{
+            if(tmp.fieldName.compareTo(name) == 0){
+              return i;}
           } 
           ++i; 
         } 
@@ -238,6 +243,7 @@ public class TupleDesc implements Serializable {
         if(!td1.repo.addAll(td2.repo)){
           System.err.println("Warning: merge failed.");
         } 
+        td1.fieldNum += td2.fieldNum;
         return td1;
     }
 
@@ -252,11 +258,13 @@ public class TupleDesc implements Serializable {
      */
     public boolean equals(Object o) {
         // some code goes here
-        TupleDesc tud = (TupleDesc) o;
-        if(this.fieldNum == tud.fieldNum){
-          TDItem tdif, tdis;
+        // avoid NullPointerException.
+        if(o == null){
+          return false;
+        }
+        if(this.fieldNum == ((TupleDesc) o).fieldNum){
           Iterator<TDItem> iterf = iterator();
-          Iterator<TDItem> iters = tud.iterator();
+          Iterator<TDItem> iters = ((TupleDesc) o).iterator();
           while(iterf.hasNext() && iters.hasNext()){
             if(!iterf.next().equals(iters.next())){
               return false;

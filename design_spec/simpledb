@@ -1,0 +1,6 @@
+                    Simpledb Project Specification
+  Overview: Will be completed later.
+PartI: design trade-off
+  1> During the code process, we try our best to get the code more readable.
+So when we get a new idea, we put it in the code only when it will not make
+our code more complex or hard to understand.
