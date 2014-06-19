@@ -36,7 +36,7 @@ public class TupleDesc implements Serializable {
         }
         //This constructor should nerver be used except runing test.
         public TDItem(){
-          this(Type.INT_TYPE, "null");
+          this(Type.INT_TYPE, null);
         }
 
         /**
@@ -84,7 +84,14 @@ public class TupleDesc implements Serializable {
 
     // Starting index of iterator.
     private final static int iterBase = 0;
-
+    
+    /**
+     * Create an empty TupleDesc.
+     */
+    public TupleDesc(){
+      repo = new LinkedList<TDItem>();
+      fieldNum = 0;
+    }
 
     /**
      * Create a new TupleDesc with typeAr.length fields with fields of the
@@ -204,7 +211,7 @@ public class TupleDesc implements Serializable {
             if(name == null)
               {return i;}
           } else{
-            if(tmp.fieldName.compareTo(name) == 0){
+            if((name != null) && (tmp.fieldName.compareTo(name) == 0)){
               return i;}
           } 
           ++i; 
@@ -240,11 +247,13 @@ public class TupleDesc implements Serializable {
      */
     public static TupleDesc merge(TupleDesc td1, TupleDesc td2) {
         // some code goes here
-        if(!td1.repo.addAll(td2.repo)){
+        TupleDesc result = new TupleDesc(); 
+        result.repo = (LinkedList<TDItem>) td1.repo.clone();
+        if(!result.repo.addAll(td2.repo)){
           System.err.println("Warning: merge failed.");
         } 
-        td1.fieldNum += td2.fieldNum;
-        return td1;
+        result.fieldNum = td1.numFields() + td2.numFields();
+        return result;
     }
 
     /**
@@ -258,13 +267,14 @@ public class TupleDesc implements Serializable {
      */
     public boolean equals(Object o) {
         // some code goes here
-        // avoid NullPointerException.
-        if(o == null){
+        // avoid NullPointerException and o is not a TupleDesc object.
+        if((o == null) || !(o instanceof TupleDesc)){
           return false;
         }
-        if(this.fieldNum == ((TupleDesc) o).fieldNum){
+        TupleDesc td = ((TupleDesc) o);
+        if(this.fieldNum == td.fieldNum){
           Iterator<TDItem> iterf = iterator();
-          Iterator<TDItem> iters = ((TupleDesc) o).iterator();
+          Iterator<TDItem> iters = td.iterator();
           while(iterf.hasNext() && iters.hasNext()){
             if(!iterf.next().equals(iters.next())){
               return false;

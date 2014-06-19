@@ -1,0 +1,47 @@
+Project 1:
+TupleDescTest first debug. The result is:
+Buildfile: /home/darkangle/course_work/cs186/project1/build.xml
+
+compile:
+
+testcompile:
+    [javac] Compiling 1 source file to /home/darkangle/course_work/cs186/project1/bin/test
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.5
+    [javac] 1 warning
+    ---Consult man page about javac about "Cross compilation". I solve this by adding a
+    ---"-source 1.7" to the command line argument.
+runtest:
+    [junit] Running simpledb.TupleDesc
+    [junit] Testsuite: simpledb.TupleDesc
+    [junit] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.052 sec
+    [junit] Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.052 sec
+    [junit] 
+    [junit] Testcase: initializationError took 0.004 sec
+    [junit] 	Caused an ERROR
+    [junit] Test class can only have one constructor
+    [junit] java.lang.IllegalArgumentException: Test class can only have one constructor
+    [junit] 	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+    [junit] 
+----This happend may be for ant not support junit4, or you type wrong target test.
+TupleDescTest passed. The result is:
+Buildfile: /home/darkangle/course_work/cs186/project1/build.xml
+
+compile:
+
+testcompile:
+
+runtest:
+    [junit] Running simpledb.TupleDescTest
+    [junit] Testsuite: simpledb.TupleDescTest
+    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.147 sec
+    [junit] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.147 sec
+    [junit] 
+    [junit] Testcase: nameToId took 0.076 sec
+    [junit] Testcase: numFields took 0.002 sec
+    [junit] Testcase: testEquals took 0.001 sec
+    [junit] Testcase: combine took 0.001 sec
+    [junit] Testcase: getType took 0.02 sec
+    [junit] Testcase: getSize took 0.002 sec
+
+BUILD SUCCESSFUL
+Total time: 1 second

@@ -12,11 +12,10 @@ msg.tmp
 
 # ignore vim temp file.
 *.swp
+*.swo
 
 # ignore others directory
 /others
-
-/test_result
 
 /lib
 /javadoc
