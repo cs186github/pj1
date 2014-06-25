@@ -8,10 +8,23 @@ import java.util.Iterator;
  * Tuple maintains information about the contents of a tuple. Tuples have a
  * specified schema specified by a TupleDesc object and contain Field objects
  * with the data for each field.
+ *
+ * We use an array to hold the fields. It is allocated by calling constructor.
  */
 public class Tuple implements Serializable {
 
     private static final long serialVersionUID = 1L;
+   
+    private Fields[] fields; 
+    private TupleDesc tud;
+    private int fieldNum;
+    private RecordId rid;
+    /**
+     * Create an empty Tuple.
+     */
+    public Tuple(){
+      this(null);
+    }
 
     /**
      * Create a new tuple with the specified schema (type).
@@ -22,14 +35,44 @@ public class Tuple implements Serializable {
      */
     public Tuple(TupleDesc td) {
         // some code goes here
+        /*if(td != null){
+          fields = new LinkedList<Field>();
+          Iterator<TDItem> iter = td.iterator();
+          TupleDesc.TDItem tdi;
+          while(iter.hasNext()){
+            tdi = iter.next();
+            switch(tdi.fieldType){
+                fields.add(new ); 
+            case STRING_TYPE:
+            } 
+          } 
+        } else{
+          this();
+        }*/
+     
+        if(td == null){
+          fields = null; 
+          tud = new TupleDesc();
+          fieldNum = 0;
+          rid = null;
+        } else{
+          this.tud = td;  
+          fieldNum = td.numFields();
+          fields = new Fields[fieldNum] 
+          rid = null;
+          
+        } 
     }
 
     /**
      * @return The TupleDesc representing the schema of this tuple.
+     *
+     * Note: The returned TupleDesc is the same object that this Tuple used.
+     *       Change the returned value, change the inner structure. Be careful.
      */
     public TupleDesc getTupleDesc() {
         // some code goes here
-        return null;
+        return this.tud;
     }
 
     /**
@@ -38,7 +81,7 @@ public class Tuple implements Serializable {
      */
     public RecordId getRecordId() {
         // some code goes here
-        return null;
+        return rid;
     }
 
     /**
@@ -49,6 +92,7 @@ public class Tuple implements Serializable {
      */
     public void setRecordId(RecordId rid) {
         // some code goes here
+        this.rid = rid;
     }
 
     /**
@@ -61,6 +105,11 @@ public class Tuple implements Serializable {
      */
     public void setField(int i, Field f) {
         // some code goes here
+        if(i >= 0 && i < fields.length){
+          fields[i] = f; 
+        } else{
+          System.err.println("!!! Invalid index.");
+        } 
     }
 
     /**
@@ -71,7 +120,7 @@ public class Tuple implements Serializable {
      */
     public Field getField(int i) {
         // some code goes here
-        return null;
+        return fields[i];
     }
 
     /**
@@ -94,6 +143,6 @@ public class Tuple implements Serializable {
     public Iterator<Field> fields()
     {
         // some code goes here
-        return null;
+        
     }
 }

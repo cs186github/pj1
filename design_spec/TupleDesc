@@ -9,3 +9,7 @@
  for performance reason, there is a possiblity that the merge method need to be 
  improved later. Fourthly, we use a "null" name to spacify an empty fieldName. It really
  simplifies the code.
+ 2. Tuple: Tuple maintains the information about a tuple. We have no idea what exactly it
+ is. So the code may be troublesome. We are still working on it. What we implement now is
+ to keep track of TupleDesc and Fields of the corresponding Tuple. The TupleDesc is just 
+ a reference. All of the Tuples defined by the same TupleDesc have the same TupleDesc.

@@ -4,3 +4,45 @@ PartI: design trade-off
   1> During the code process, we try our best to get the code more readable.
 So when we get a new idea, we put it in the code only when it will not make
 our code more complex or hard to understand.
+Part II: Simpledb architeture
+
+ 		  SQL operations    Results 
+           		   |           ^
+  		           |           |
+  -------------------------v-------------------------------
+  |                  Database APP			  |
+  ---------------------------------------------------------
+  |            Query optimisation and query plan          |
+  |                 generating                            |
+  ---------------------------------------------------------
+  |                Relational operations                  |
+  ---------------------------------------------------------
+  |                  Access Methods                       |
+  ---------------------------------------------------------
+  |               Buffer Pool management(Core part)       |
+  ---------------------------------------------------------
+  |             Disk Space management                     | 
+  --------------------------------------^------------------
+                                  |     |
+                           -------v---------
+                           |               |
+                           |   Data Base   |  <----------------Disk, Tape, other 
+                           |               |                   secondary storages.
+                           -----------------
+Part III: class specifications
+    In this part, we describles how each part of the system works and the detailed
+design specifications for every class. For a few classes, there may include the 
+test skeleton. The spacification should be clear enough for a expericed programmer 
+to write all the code in a few hours.
+ Section I: designing
+ 1. BufferPool
+  <1>Tasks 
+     Page managing. A buffer pool is a collection of Pages that initially are empty.When a read is
+        
+     Lock checking.
+  <2>Implementations
+     PAGE_SIZE
+     DEFAULT_PAGES
+     private static final Page[DEFAULT_PAGES]  
+ Section II: testing
+   
