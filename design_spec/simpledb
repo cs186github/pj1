@@ -30,19 +30,64 @@ Part II: Simpledb architeture
                            |               |                   secondary storages.
                            -----------------
 Part III: class specifications
-    In this part, we describles how each part of the system works and the detailed
-design specifications for every class. For a few classes, there may include the 
-test skeleton. The spacification should be clear enough for a expericed programmer 
-to write all the code in a few hours.
+    In this part, we describles how each part of the system works and the detailed design specifications for every class. For a few classes, there may include the test skeleton. The spacification should be clear enough for a expericed programmer to write all the code in a few hours.
  Section I: designing
  1. BufferPool
   <1>Tasks 
-     Page managing. A buffer pool is a collection of Pages that initially are empty.When a read is
-        
-     Lock checking.
+    Read pages from the disk.
+    Writ pages to the disk.
+    Keep track of the using pages and empty pages.
+    Swap pages(Replacing scheduler).
+    Update residential pages(Delete tuple, Insert tuple).
+    Check lock. 
   <2>Implementations
-     PAGE_SIZE
-     DEFAULT_PAGES
-     private static final Page[DEFAULT_PAGES]  
+    Data structure:
+    public static final int PAGE_SIZE
+    public static final int DEFAULT_PAGES
+    private static final byte[] _pool : _pool is a buffer pool data structure, which holds the residential pages. During the database runtime, you can create only one _pool, which is created when BufferPool is constructed.  
+    private static final int[] pinCount : pinCount keeps track of the times of the corresponding page being referenced.  
+    private static final byte[] dirty : If a page is updated, change the dirty byte to 1.
+    private static final boolean[] lock : ...
+    Methods:
+    public BufferPool(int numPages){
+      Create a _pool with numPages pages.
+      Create and initialze the pinCount to zero.
+      Create and initialze the dirty to zero.
+    } Note the length of arrays. 
+    public BufferPool(){
+      this(DEFAULT_PAGES);
+    }
+    public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
+        throws TransactionAbortedException, DbException {
+       Assert tid, pid and perm is not null.
+       ??What is a transaction
+       ??What is permission     
+    } Not completed(Concurrecy related).
+    public boolean holdsLock(TransactionId tid, PageId p) {
+    }
+    public  void releasePage(TransactionId tid, PageId pid) {
+       ??How to hold a page
+    } 
+    public void transactionComplete(TransactionId tid) throws IOException {
+    }
+    public void transactionComplete(TransactionId tid, boolean commit)
+        throws IOException {
+    }
+    public void insertTuple(TransactionId tid, int tableId, Tuple t)
+        throws DbException, IOException, TransactionAbortedException {
+    }
+    public  void deleteTuple(TransactionId tid, Tuple t)
+        throws DbException, TransactionAbortedException {
+    }
+    public synchronized void flushAllPages() throws IOException {
+    }    
+    public synchronized void discardPage(PageId pid) {
+    }
+    private synchronized  void flushPage(PageId pid) throws IOException {
+    }
+    public synchronized  void flushPages(TransactionId tid) throws IOException {
+    }    
+    private synchronized  void evictPage() throws DbException {
+    }  
  Section II: testing
    
