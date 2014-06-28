@@ -14,9 +14,6 @@ msg.tmp
 *.swp
 *.swo
 
-# ignore others directory
-/others
-
 /lib
 /javadoc
 log

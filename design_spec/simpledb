@@ -1,6 +1,6 @@
                     Simpledb Project Specification
   Overview: Will be completed later.
-PartI: design trade-off
+PartI: design trade-offs 
   1> During the code process, we try our best to get the code more readable.
 So when we get a new idea, we put it in the code only when it will not make
 our code more complex or hard to understand.
@@ -89,5 +89,72 @@ Part III: class specifications
     }    
     private synchronized  void evictPage() throws DbException {
     }  
+ 2. File organization
+  <1> Database files
+      DbFile: all of the database files should implement this.
+         |___CatalogFile: contains system catalog.
+         |___HeapFile: stores relations.
+         |___LogFile: system log. Used for data recovery. Write log first.
+  <2> Heapfile related details 
+      *HeapPageId class*
+        HeapPageId is used to reference a HeapPage. It must contain which table it belongs to and where it resides in the table.  
+        
+        int tid : the table it belongs to.
+        int pgn : the page number of this page, which should always less than the page number of the corresponding field in the system catalog.   
+       *HeapPage class*
+         HeapPage is used to hold a page of a HeapFile. The format of a HeapPage is like: 
+         --------------------------------
+         | header part | ... | tuple 1  |
+         |-------------------------------
+         | tuple 2| ...|(empty part) 0 0|
+         --------------------------------
+The length of header part and the number of slots in this page is stored in the corresponding system catalog entry. ??How to maintain the dirty information of a page. 
+
+         HeapPageId pid : the identifier of this page. <TableId, pageNo> 
+         TupleDesc td : td should reference a copy of the corresponding table TupleDesc in the system catalog. That way there is little chance to change it unexpectedly.
+         byte header[] : the byte of the header occupied. The bits of it indicates whether a slot of this page is occupied or used. e.g if header[i] is 1, then slot #1 is in using, otherwise is not in using. 
+         Tuple tuples[] : 
+         int numSlots : the number of slots in this page. it should always equal to tuples.length. 
+         byte[] oldData : when it is filled, it maintains the data this page. It can be used to rebuild a same page as this one.  
+          
+
+         deleteTuple(Tuple t) throws DbException{
+           find the tuple using its RecordId, if the tuple is not in this page or the tuple slot has already empty, throws DbException. 
+           set the corresponding tuple to null.
+           set the corresponding header bit to 0.  
+         } 
+         public static Tuple findTuple(Tuple t) throws DbException{
+           (new added method)
+           if t is in this page and return it, throws a DbException otherwise. 
+         }
+         public void markDirty(boolean dirty, TransactionId tid) {
+           Set this.dirty to true and record the corresponding TransactionId.
+         }
+        
+  <3> Catalogfile related details
+       *CatalogItem interface*
+         CatalogItem interface is used to facilitate an item in the catalog. All of items a system catalog want to store must implement this class. In the implementation, this class and all of the subclass reside in the Catalog class.  
+       *CatalogHeap extends CatalogItem*
+        int tableId : every table has a unique tableId to reference a table in this database. We will use tableId as a hash key to reference a CatalogHeap in the hashtable. 
+        String tableName : maintains the table name of the corresponding tableId. May be "", but not null.  
+        TupleDesc tds : the current tuple descriptor.
+        String pkey : the primary key of this table.
+        int numPage : the number of pages of the corresponding file.
+        int headerLen : the length of header part in a page. 
+        int numSlots : the number of slots in a page.
+        String tableLoc: the location of this table on the disk. Default to be "current directory/data"
+ 
+       *CatalogLog extends CatalogItem*
+       
+       
+       *Catalog class*
+        Catalog is also a table, which maintains the system catalog of the current database system.  
+        
+        java.util.HashTable<Integer, CatalogItem>[] catalog : maintains all of the catalog information, Where catalog[0] is about database table, catalog[1] is about database log file information.
+         
+      
+  <4> Tuple related details
+      *Tuple class*
+        A Tuple          
  Section II: testing
    

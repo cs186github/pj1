@@ -24,7 +24,7 @@ public class RecordId implements Serializable {
     }
 
     /**
-     * @return the tuple number this RecordId references.
+     * @return the tuple number of this RecordId references.
      */
     public int tupleno() {
         // some code goes here

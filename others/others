@@ -1,0 +1,36 @@
+                    Misllaneous
+  Overview: this part of file recordes some difficulties we met during
+building the system. And finally we make it.
+
+Part I: About ant.
+  Ant is a project building tools. It is powerful, cross-platform and 
+well documented. During the project, I had a problem to run the ant with
+Junit functionality. Acturally, you don't need to deploy it for using it
+to building unit test. It has already done. All you need is to have the 
+specific junit-*.jar to be included.
+Part II: About junit.
+  Junit is a unit test framework. It easy to learn, easy to use. When we 
+build the project, we use junit3.X and junit4. It is confusing. For the following
+career, just use the junit4 with pure annation to do the unit test job.
+It is highly recommended.
+Part III: About coding.
+  1> null. The 'null' value is harmful to a robust program. Do what ever 
+you can to stop the NullPointerException, It will stop your program and 
+the but source is very hard to track down. So when you get a parameter of
+a method, if neccessary, get it checked. And the bottum line is whenever you
+need to use a method or a field of a object, check whether that reference
+'null' or not.
+  2> 
+Part IV: About design
+  Design is the most important part of the entire project since it decide
+the heart of it. What contributes a good design is having a good performance,
+full functionalities, little-buggy, more modular and more understandable.
+A good design also is to follow some cricial paths to the functionalities of
+the project. When you get a big project, if you want to start design it, then
+you must work out the most heart of the project. It is always hardest part to
+understand. However, once you understand this, you understand the project. You
+can start your design at least. Just remember that all parts excluding the core
+are the auxiliary parts that do their jobs by talking to core part. 
+  During the design of this project, the most difficult part is to figure out
+how the buffer pool works. When I figure this out, the design gets straight
+forward. 
