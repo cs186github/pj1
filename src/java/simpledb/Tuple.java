@@ -17,7 +17,6 @@ public class Tuple implements Serializable {
    
     private Fields[] fields; 
     private TupleDesc tud;
-    private int fieldNum;
     private RecordId rid;
     /**
      * Create an empty Tuple.
@@ -145,4 +144,5 @@ public class Tuple implements Serializable {
         // some code goes here
         
     }
-}
+
+

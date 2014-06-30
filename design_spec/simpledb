@@ -155,6 +155,22 @@ The length of header part and the number of slots in this page is stored in the 
       
   <4> Tuple related details
       *Tuple class*
-        A Tuple          
+        A Tuple maintains the information about the contents of a tuple. Its location on a page of a table is marked with a RecordId, whose contents are about where this tuple is. Once a tuple is created, its length is determined and is not changed until this table is rebuild. So if you want to change a TupleDesc and it actually effect the tuple, the table must be recreated to accomplish this job. 
+
+        private static final long serialVersionUID = 1L;
+        private Fields[] fields : this array holds the fields data in a tuple. Its length is specified in its TupleDesc object.  
+        private TupleDesc tud : when initialized, tud is specified to reference the corresponding TupleDesc item in the system catalog.
+        private RecordId rid : it is initialized when this tuple is loaded. 
+ 
+        public Tuple(TupleDesc td){
+          if td is null:
+             print warning "Tuple construtor failure: TupleDesc can not be null." 
+          else:
+             initialize this tuple.
+        }
+ 
+      *
+
+
  Section II: testing
    
