@@ -14,7 +14,7 @@ public class TupleDesc implements Serializable {
      *
      * Do not try to give fieldName a null reference, that will give a chance to
      * throw a java.lang.NUllPointerException while you do some operations on this
-     * object. We use a "null" string to specify an empty fieldName.`
+     * object. 
      * */
     public static class TDItem implements Serializable {
 

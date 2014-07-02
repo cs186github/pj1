@@ -15,6 +15,25 @@ import java.util.*;
  */
 
 public class Catalog {
+   /**
+    * A help interface to facilitate organizating the information of each
+    * entry in a system catalog. All of the entries in catalog should 
+    * implement this interface.
+    */ 
+   public abstract CatalogEntry{
+     
+     /**
+      * Specify a unique entry in the system catalog. 
+      */
+     private int entryID; 
+     
+     public String toString();
+   }
+   /**
+    * Instance of CatalogItem that stores the information about a heap file.
+    */ 
+   public class CatalogHeap implements CatalogEntry{{
+   }
 
     /**
      * Constructor.

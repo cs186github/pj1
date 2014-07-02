@@ -32,7 +32,7 @@ public class Tuple implements Serializable {
           // When get a null td, print warning.
           Debug.log("!!!Warning: a null TupleDesc is passed to Tuple constructor."); 
         }
-        this.fields = new Field()[td.numFields()];
+        this.fields = new Field[td.numFields()];
         this.tud = td; 
         this.rid = null;
    }
@@ -113,6 +113,8 @@ public class Tuple implements Serializable {
      * @return
      *        An iterator which iterates over all the fields of this tuple
      * */
+    
+    @SuppressWarnings("unchecked")
     public Iterator<Field> fields()
     {
         // some code goes here
@@ -129,7 +131,7 @@ public class Tuple implements Serializable {
             throw new UnsupportedOperationException();
           }
         }
-        return (Iterator<Fields>)new FieldIterator();
+        return (Iterator<Field>)new FieldIterator();
     }
 
 }

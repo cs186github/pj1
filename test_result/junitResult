@@ -45,3 +45,33 @@ runtest:
 
 BUILD SUCCESSFUL
 Total time: 1 second
+TupleTest passed. The result is:
+
+ldfile: /home/darkangle/course_work/cs186/project1/build.xml
+
+compile:
+    [javac] Compiling 1 source file to /home/darkangle/course_work/cs186/project1/bin/src
+
+testcompile:
+
+runtest:
+    [junit] Running simpledb.TupleTest
+    [junit] Testsuite: simpledb.TupleTest
+    [junit] Tests run: 3, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.074 sec
+    [junit] Tests run: 3, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.074 sec
+    [junit] 
+    [junit] Testcase: modifyFields took 0.018 sec
+    [junit] Testcase: modifyRecordId took 0.006 sec
+    [junit] 	Caused an ERROR
+    [junit] modifyRecordId() test failed due to RecordId.equals() not being implemented.  This is not required for Lab 1, but should pass when you do implement the RecordId class.
+    [junit] java.lang.UnsupportedOperationException: modifyRecordId() test failed due to RecordId.equals() not being implemented.  This is not required for Lab 1, but should pass when you do implement the RecordId class.
+    [junit] 	at simpledb.TupleTest.modifyRecordId(TupleTest.java:54)
+    [junit] 
+    [junit] Testcase: getTupleDesc took 0.001 sec
+
+BUILD FAILED
+/home/darkangle/course_work/cs186/project1/build.xml:202: The following error occurred while executing this line:
+/home/darkangle/course_work/cs186/project1/build.xml:82: Test simpledb.TupleTest failed
+
+Total time: 3 seconds
+Buildfile: /home/darkangle/course_work/cs186/project1/build.
