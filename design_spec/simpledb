@@ -160,7 +160,7 @@ The length of header part and the number of slots in this page is stored in the 
         private static final long serialVersionUID = 1L;
         private Fields[] fields : this array holds the fields data in a tuple. Its length is specified in its TupleDesc object.  
         private TupleDesc tud : when initialized, tud is specified to reference the corresponding TupleDesc item in the system catalog.
-        private RecordId rid : it is initialized when this tuple is loaded. 
+        private RecordId rid : it is initialized when this tuple is loaded. When it is first created, the rid is initialized to a 'null'. 
  
         public Tuple(TupleDesc td){
           if td is null:
@@ -168,8 +168,14 @@ The length of header part and the number of slots in this page is stored in the 
           else:
              initialize this tuple.
         }
- 
-      *
+   <5> Operators details
+        Operators are reponsible for excuting a query plan. All of the query jobs are exeuted by the low level operators. 
+       *SeqScan class*
+         SeqScan sequentially scans the tuple of a specified table.
+
+         private TransactionId tid : the transaction this scan is running as a part of.
+         
+       
 
 
  Section II: testing

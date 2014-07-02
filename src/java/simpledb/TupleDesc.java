@@ -250,7 +250,7 @@ public class TupleDesc implements Serializable {
         TupleDesc result = new TupleDesc(); 
         result.repo = (LinkedList<TDItem>) td1.repo.clone();
         if(!result.repo.addAll(td2.repo)){
-          System.err.println("Warning: merge failed.");
+          Debug.log("!!!Warning: TupleDesc merge failed.");
         } 
         result.fieldNum = td1.numFields() + td2.numFields();
         return result;

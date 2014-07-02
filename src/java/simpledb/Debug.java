@@ -41,8 +41,7 @@ public class Debug {
   public static boolean isEnabled(int level) {
     return level <= DEBUG_LEVEL;
   }
-
-  /** @return true if the default level is being logged. */
+/** @return true if the default level is being logged. */
   public static boolean isEnabled() {
     return isEnabled(DEFAULT_LEVEL);
   }

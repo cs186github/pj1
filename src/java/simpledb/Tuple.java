@@ -15,15 +15,9 @@ public class Tuple implements Serializable {
 
     private static final long serialVersionUID = 1L;
    
-    private Fields[] fields; 
+    private Field[] fields; 
     private TupleDesc tud;
     private RecordId rid;
-    /**
-     * Create an empty Tuple.
-     */
-    public Tuple(){
-      this(null);
-    }
 
     /**
      * Create a new tuple with the specified schema (type).
@@ -34,34 +28,14 @@ public class Tuple implements Serializable {
      */
     public Tuple(TupleDesc td) {
         // some code goes here
-        /*if(td != null){
-          fields = new LinkedList<Field>();
-          Iterator<TDItem> iter = td.iterator();
-          TupleDesc.TDItem tdi;
-          while(iter.hasNext()){
-            tdi = iter.next();
-            switch(tdi.fieldType){
-                fields.add(new ); 
-            case STRING_TYPE:
-            } 
-          } 
-        } else{
-          this();
-        }*/
-     
         if(td == null){
-          fields = null; 
-          tud = new TupleDesc();
-          fieldNum = 0;
-          rid = null;
-        } else{
-          this.tud = td;  
-          fieldNum = td.numFields();
-          fields = new Fields[fieldNum] 
-          rid = null;
-          
-        } 
-    }
+          // When get a null td, print warning.
+          Debug.log("!!!Warning: a null TupleDesc is passed to Tuple constructor."); 
+        }
+        this.fields = new Field()[td.numFields()];
+        this.tud = td; 
+        this.rid = null;
+   }
 
     /**
      * @return The TupleDesc representing the schema of this tuple.
@@ -80,7 +54,7 @@ public class Tuple implements Serializable {
      */
     public RecordId getRecordId() {
         // some code goes here
-        return rid;
+        return this.rid;
     }
 
     /**
@@ -105,9 +79,9 @@ public class Tuple implements Serializable {
     public void setField(int i, Field f) {
         // some code goes here
         if(i >= 0 && i < fields.length){
-          fields[i] = f; 
+          this.fields[i] = f; 
         } else{
-          System.err.println("!!! Invalid index.");
+          Debug.log("!!!Fatal error: the index is invalid.(Tuple.setField).");
         } 
     }
 
@@ -119,7 +93,7 @@ public class Tuple implements Serializable {
      */
     public Field getField(int i) {
         // some code goes here
-        return fields[i];
+        return this.fields[i];
     }
 
     /**
@@ -142,7 +116,20 @@ public class Tuple implements Serializable {
     public Iterator<Field> fields()
     {
         // some code goes here
-        
+        class FieldIterator implements Iterator{
+          int loc = 0; 
+          public boolean hasNext(){
+            return loc < fields.length;
+          }
+          public Field next(){
+            loc++;
+            return fields[loc-1]; 
+          }
+          public void remove(){
+            throw new UnsupportedOperationException();
+          }
+        }
+        return (Iterator<Fields>)new FieldIterator();
     }
 
-
+}
