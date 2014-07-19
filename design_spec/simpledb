@@ -132,9 +132,9 @@ The length of header part and the number of slots in this page is stored in the 
          }
         
   <3> Catalogfile related details
-       *CatalogItem interface*
-         CatalogItem interface is used to facilitate an item in the catalog. All of items a system catalog want to store must implement this class. In the implementation, this class and all of the subclass reside in the Catalog class.  
-       *CatalogHeap extends CatalogItem*
+       *CatalogEntry interface*
+         CatalogEntry interface is used to facilitate an item in the catalog. All of items a system catalog want to store must implement this class. In the implementation, this class and all of the subclass reside in the Catalog class.  
+       *CatalogHeap extends CatalogEntry*
         int tableId : every table has a unique tableId to reference a table in this database. We will use tableId as a hash key to reference a CatalogHeap in the hashtable. 
         String tableName : maintains the table name of the corresponding tableId. May be "", but not null.  
         TupleDesc tds : the current tuple descriptor.
@@ -142,13 +142,16 @@ The length of header part and the number of slots in this page is stored in the 
         int numPage : the number of pages of the corresponding file.
         int headerLen : the length of header part in a page. 
         int numSlots : the number of slots in a page.
-        String tableLoc: the location of this table on the disk. Default to be "current directory/data"
- 
+        String tableLoc: the location of this table on the disk. Default to be "current directory/data". This feature has not been implemented.
+        
+        numSlots = floor((BufferPool.PAGE_SIZE * 8) / (tuple size * 8 + 1)) 
+        headerLen = ceiling(tupsPerPage/8)
+
        *CatalogLog extends CatalogItem*
        
        
        *Catalog class*
-        Catalog is also a table, which maintains the system catalog of the current database system.  
+        Catalog is also a table, which maintains the system catalog of the current database system. When add a table into this catalog, we use a unique database file identifier(returned by dbfile.getId()). If a table name is 'null', we will give that table a name converted by its identifier and may print a warning message.  
         
         java.util.HashTable<Integer, CatalogItem>[] catalog : maintains all of the catalog information, Where catalog[0] is about database table, catalog[1] is about database log file information.
          
