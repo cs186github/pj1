@@ -20,28 +20,19 @@ public class Catalog {
     * entry in a system catalog. All of the entries in catalog should 
     * implement this interface.
     */ 
-   public abstract CatalogEntry{
+   public abstract class CatalogEntry{
      
-     /**
-      * Specify a unique entry in the system catalog. For each entry in a catalog
-      * this item should be unique. 
-      */
-     private int entryID; 
-     /**
-      * Specify a name for this catalog entry.
-      */
-     private String entryName;
-
+     
      /**
       * Return the string format of this entry.
       */ 
-     public String toString();
+     public abstract String toString();
    }
    /**
     * Instance of CatalogItem that stores the information about a heap file.
     *
     * Inherited fields:
-    * 		private int entryID
+    * 		private int entryId
     *		private String entryName 
     * 
     * Also this catalog entry maintains such specific information:
@@ -54,7 +45,17 @@ public class Catalog {
     *		(5)The number of slots of a heap page.
     *
     */ 
-   public class CatalogHeap implements CatalogEntry{
+   public class CatalogHeap extends CatalogEntry{
+    /**
+     * Specify a unique entry in the system catalog. For each entry in a catalog
+     * this item should be unique. 
+      */
+     private int entryId; 
+     /**
+      * Specify a name for this catalog entry.
+      */
+     private String entryName;
+
      /**
       * The primary key of this relation.
       */
@@ -94,7 +95,7 @@ public class Catalog {
       * @param tds specifies ths skema of this relation. 
       */
       public CatalogHeap(DbFile file, String tname, String pkey, TupleDesc tds){
-        this.entryID = file.getId();
+        this.entryId = file.getId();
         this.entryName = tname;
         this.numPage = 0;
         this.pkey = pkey;
@@ -110,13 +111,16 @@ public class Catalog {
        * Return the String representation of this entry item.
        */
       public String toString(){
-        return "This feature has not been implemented yet.\n"
+        return "This feature has not been implemented yet.\n";
+          
+        
       }
      
     
    }
   
-    HashTable<Integer, CatalogEntry> catalog; 
+    private Hashtable<Integer, CatalogEntry> catalog; 
+    private LinkedList<Integer> ID;
 
     /**
      * Constructor.
@@ -124,7 +128,8 @@ public class Catalog {
      */
     public Catalog() {
         // some code goes here
-        catalog = new HashTable<Integer, CatalogEntry>();
+        catalog = new Hashtable<Integer, CatalogEntry>();
+        ID = new LinkedList<Integer>();
     }
 
     /**
@@ -143,9 +148,17 @@ public class Catalog {
           Debug.log("!!!warning: a table name of 'null' is founded.(Catalog.addTable)");
           name = String.valueOf(file.getId());
         }
-        Catalog.CatalogHeap cah = Catalog.new CatalogHeap(file,
+        Integer id = new Integer(file.getId());
+        CatalogHeap cah = new CatalogHeap(file,
                                   name, pkeyField, file.getTupleDesc());  
-        catalog.put(Integer.valueOf(file.getId())); 
+        System.out.println("ID is " + ID);
+        if(ID.contains(id)){
+          System.out.printf("!!!warning: tableid(%d) has beed inserted in system catalog. Repeated inserting is not allowed.\n", file.getId()); 
+        } else {
+          ID.add(id);
+          catalog.put(id, cah); 
+        }
+        
     }
 
     public void addTable(DbFile file, String name) {
@@ -169,7 +182,15 @@ public class Catalog {
      */
     public int getTableId(String name) throws NoSuchElementException {
         // some code goes here
-        return 1; 
+        ListIterator<Integer> iter = ID.listIterator(0);
+        Integer id;
+        while(iter.hasNext()){
+          id = iter.next(); 
+          if(((CatalogHeap) catalog.get(id)).entryName.equals(name)){
+            return id.intValue(); 
+          }
+        } 
+        throw new NoSuchElementException("no such table named " + name + " in the system catalog.");
  	 
     }
 
@@ -181,9 +202,9 @@ public class Catalog {
      */
     public TupleDesc getTupleDesc(int tableid) throws NoSuchElementException {
         // some code goes here
-       Catalog.CatalogHeap cah= (Catalog.CatalogHeap) catalog.get(Integer.valueOf(tableid))
+       CatalogHeap cah= (CatalogHeap) catalog.get(Integer.valueOf(tableid));
        if(cah == null){
-         throw NoSuchElementException("no such table in the system catalog. The tableid is: " + String.valueOf(tableid));
+         throw new NoSuchElementException("no such table in the system catalog. The tableid is: " + String.valueOf(tableid));
        } else{
          return cah.tds;
        } 
@@ -198,9 +219,9 @@ public class Catalog {
     public DbFile getDbFile(int tableid) throws NoSuchElementException {
         // some code goes here
         //return null;
-        Catalog.CatalogHeap cah= (Catalog.CatalogHeap) catalog.get(Integer.valueOf(tableid))
+        Catalog.CatalogHeap cah= (Catalog.CatalogHeap) catalog.get(Integer.valueOf(tableid));
        if(cah == null){
-         throw NoSuchElementException("no such table in the system catalog. The tableid is: " + String.valueOf(tableid));
+         throw new NoSuchElementException("no such table in the system catalog. The tableid is: " + String.valueOf(tableid));
        } else{
          return cah.dbf;
        }
@@ -209,9 +230,9 @@ public class Catalog {
     public String getPrimaryKey(int tableid) {
         // some code goes here
         // return null;
-        Catalog.CatalogHeap cah= (Catalog.CatalogHeap) catalog.get(Integer.valueOf(tableid))
+        Catalog.CatalogHeap cah= (Catalog.CatalogHeap) catalog.get(Integer.valueOf(tableid));
        if(cah == null){
-         throw NoSuchElementException("no such table in the system catalog. The tableid is: " + String.valueOf(tableid));
+         throw new NoSuchElementException("no such table in the system catalog. The tableid is: " + String.valueOf(tableid));
        } else{
          return cah.pkey;
        }
@@ -220,15 +241,16 @@ public class Catalog {
 
     public Iterator<Integer> tableIdIterator() {
         // some code goes here
-        return null;
+        //return null;
+        return ID.listIterator(0); 
     }
 
-    public String getTableName(int id) {
+    public String getTableName(int tableid) {
         // some code goes here
         // return null;
-        Catalog.CatalogHeap cah= (Catalog.CatalogHeap) catalog.get(Integer.valueOf(tableid))
+        Catalog.CatalogHeap cah= (Catalog.CatalogHeap) catalog.get(Integer.valueOf(tableid));
        if(cah == null){
-         throw NoSuchElementException("no such table in the system catalog. The tableid is: " + String.valueOf(tableid));
+         throw new NoSuchElementException("no such table in the system catalog. The tableid is: " + String.valueOf(tableid));
        } else{
          return cah.entryName;
        }
@@ -242,6 +264,12 @@ public class Catalog {
         System.out.println("----->Clearing the system catalog...");
         catalog.clear();
         System.out.println("----->System catalog clearing is done.");
+    }
+    /**
+     * Return the string format of this catalog.
+     */
+    public void printer(){
+      System.out.println("Catalog printer has not been implemented."); 
     }
     
     /**

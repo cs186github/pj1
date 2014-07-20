@@ -147,14 +147,14 @@ The length of header part and the number of slots in this page is stored in the 
         numSlots = floor((BufferPool.PAGE_SIZE * 8) / (tuple size * 8 + 1)) 
         headerLen = ceiling(tupsPerPage/8)
 
-       *CatalogLog extends CatalogItem*
+       *CatalogLog extends CatalogEntry*
        
        
        *Catalog class*
         Catalog is also a table, which maintains the system catalog of the current database system. When add a table into this catalog, we use a unique database file identifier(returned by dbfile.getId()). If a table name is 'null', we will give that table a name converted by its identifier and may print a warning message.  
         
         java.util.HashTable<Integer, CatalogItem>[] catalog : maintains all of the catalog information, Where catalog[0] is about database table, catalog[1] is about database log file information.
-         
+        java.util.LinkedList<Integer> ID : contains all of entry identifiers in this catalog. No repeated inserting is allowed. 
       
   <4> Tuple related details
       *Tuple class*

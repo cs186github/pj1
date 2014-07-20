@@ -248,7 +248,9 @@ public class TupleDesc implements Serializable {
     public static TupleDesc merge(TupleDesc td1, TupleDesc td2) {
         // some code goes here
         TupleDesc result = new TupleDesc(); 
-        result.repo = (LinkedList<TDItem>) td1.repo.clone();
+        // Will get an unchecked cast.
+        // result.repo = (LinkedList<TDItem>) td1.repo.clone() <--it is an Object;
+        result.repo = new LinkedList<TDItem>(td1.repo);
         if(!result.repo.addAll(td2.repo)){
           Debug.log("!!!Warning: TupleDesc merge failed.");
         } 
