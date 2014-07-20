@@ -19,6 +19,41 @@ public class BufferPool {
     other classes. BufferPool should use the numPages argument to the
     constructor instead. */
     public static final int DEFAULT_PAGES = 50;
+   
+    /**
+     * Holds the pages retrieved from disk.
+     */
+     private static final byte[] _pool;
+   
+    /**
+     * Keeps track of the times of the corresponding page being reference.
+     */
+     private static final int[] pinCount;
+    
+    /**
+     * Keeps track of whether the corresponding page is corrupted.
+     */
+     private static final byte[] dirty;
+    
+    /**
+     * Read lock on the corresponding page.
+     * <p>
+     * When a trasaction need to read a page, it have to acquire a readLock on
+     * that page. There can be more than one reader reading a specified page. 
+     */
+    private static final int[] readLock;
+   
+    /**
+     * Write lock on the corresponding page.
+     * <p>
+     * When a trasaction need to write a page, it have to acquire a writeLock on
+     * that page. If there are readers reading that page, the writer have to waite
+     * until all readings are done. And there is at most one wirter is writing the
+     * page at some time.
+     */
+    private static final boolean[] writeLock;
+    
+
 
     /**
      * Creates a BufferPool that caches up to numPages pages.

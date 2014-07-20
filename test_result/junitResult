@@ -75,3 +75,41 @@ BUILD FAILED
 
 Total time: 3 seconds
 Buildfile: /home/darkangle/course_work/cs186/project1/build.
+
+Catalog.java is done. All tests passed. But there are a few helper unimplemented methods. Including printer(), toString().
+
+Junit test results:
+
+Buildfile: /home/darkangle/course_work/cs186/project1/build.xml
+
+compile:
+
+testcompile:
+
+runtest:
+    [junit] Running simpledb.CatalogTest
+    [junit] Testsuite: simpledb.CatalogTest
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 sec
+    [junit] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.101 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] ----->Clearing the system catalog...
+    [junit] ----->System catalog clearing is done.
+    [junit] ID is []
+    [junit] ID is [-1]
+    [junit] ----->Clearing the system catalog...
+    [junit] ----->System catalog clearing is done.
+    [junit] ID is []
+    [junit] ID is [-1]
+    [junit] ----->Clearing the system catalog...
+    [junit] ----->System catalog clearing is done.
+    [junit] ID is []
+    [junit] ID is [-1]
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: getDbFile took 0.055 sec
+    [junit] Testcase: getTableId took 0.001 sec
+    [junit] Testcase: getTupleDesc took 0.001 sec
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Sun Jul 20 09:23:53 CST 2014

@@ -31,7 +31,7 @@ public class Catalog {
    /**
     * Instance of CatalogItem that stores the information about a heap file.
     *
-    * Inherited fields:
+    * <p>Inherited fields:
     * 		private int entryId
     *		private String entryName 
     * 
@@ -43,9 +43,9 @@ public class Catalog {
     *		(4)The header of the page, which records whether a slot a occupied 
     *		   or not.
     *		(5)The number of slots of a heap page.
-    *
+    * <p>
     */ 
-   public class CatalogHeap extends CatalogEntry{
+   public static class CatalogHeap extends CatalogEntry{
     /**
      * Specify a unique entry in the system catalog. For each entry in a catalog
      * this item should be unique. 
@@ -123,7 +123,6 @@ public class Catalog {
     private LinkedList<Integer> ID;
 
     /**
-     * Constructor.
      * Creates a new, empty catalog.
      */
     public Catalog() {
