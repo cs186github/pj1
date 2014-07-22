@@ -44,10 +44,9 @@ Part III: class specifications
     Data structure:
     public static final int PAGE_SIZE
     public static final int DEFAULT_PAGES
-    private static final byte[] _pool : _pool is a buffer pool data structure, which holds the residential pages. During the database runtime, you can create only one _pool, which is created when BufferPool is constructed.  
-    private static final int[] pinCount : pinCount keeps track of the times of the corresponding page being referenced.  
-    private static final byte[] dirty : If a page is updated, change the dirty byte to 1.
-    private static final boolean[] lock : ...
+    private static Page[] _pool : _pool is a buffer pool data structure, which holds the residential pages. During the database runtime, you can create only one _pool, which is created when BufferPool is constructed.  
+    private static int[] pinCount : pinCount keeps track of the times of the corresponding page being referenced.  
+    private static byte[] dirty : If a page is updated, change the dirty byte to 1.
     Methods:
     public BufferPool(int numPages){
       Create a _pool with numPages pages.

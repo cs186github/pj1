@@ -23,17 +23,21 @@ public class BufferPool {
     /**
      * Holds the pages retrieved from disk.
      */
-     private static final byte[] _pool;
+     private static Page[] _pool;
    
     /**
      * Keeps track of the times of the corresponding page being reference.
      */
-     private static final int[] pinCount;
+     private static int[] pinCount;
     
     /**
      * Keeps track of whether the corresponding page is corrupted.
      */
-     private static final byte[] dirty;
+     private static boolean[] dirty;
+    /**
+     * Keeps track of which slot is occupied by what page.
+     */
+     private static PageId[] pid;
     
     /**
      * Read lock on the corresponding page.
@@ -41,7 +45,7 @@ public class BufferPool {
      * When a trasaction need to read a page, it have to acquire a readLock on
      * that page. There can be more than one reader reading a specified page. 
      */
-    private static final int[] readLock;
+    //private static int[] readLock;
    
     /**
      * Write lock on the corresponding page.
@@ -51,7 +55,7 @@ public class BufferPool {
      * until all readings are done. And there is at most one wirter is writing the
      * page at some time.
      */
-    private static final boolean[] writeLock;
+    //private static boolean[] writeLock;
     
 
 
@@ -62,6 +66,18 @@ public class BufferPool {
      */
     public BufferPool(int numPages) {
         // some code goes here
+
+ 	// Create a page pool to hold pages.
+        _pool = new Page[numPages]; 
+
+ 	pid= new PageId[numPages];
+	// Create an array to keep the pincount information for the page pool.
+	pinCount = new int[numPages];
+       	dirty = new boolean[numPages];
+        // lock is not implemented in Proj1
+ 	//readLock = new int[numPages];
+	//writeLock = new boolean[numPages];	 	
+
     }
 
     /**
@@ -82,7 +98,8 @@ public class BufferPool {
     public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
         throws TransactionAbortedException, DbException {
         // some code goes here
-        return null;
+        
+        
     }
 
     /**
