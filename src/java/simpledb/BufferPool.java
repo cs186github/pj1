@@ -2,6 +2,8 @@ package simpledb;
 
 import java.io.*;
 
+import java.util.LinkedList;
+
 /**
  * BufferPool manages the reading and writing of pages into memory from
  * disk. Access methods call into it to retrieve pages, and it fetches
@@ -19,46 +21,57 @@ public class BufferPool {
     other classes. BufferPool should use the numPages argument to the
     constructor instead. */
     public static final int DEFAULT_PAGES = 50;
-   
-    /**
-     * Holds the pages retrieved from disk.
-     */
-     private static Page[] _pool;
-   
-    /**
-     * Keeps track of the times of the corresponding page being reference.
-     */
-     private static int[] pinCount;
-    
-    /**
-     * Keeps track of whether the corresponding page is corrupted.
-     */
-     private static boolean[] dirty;
-    /**
-     * Keeps track of which slot is occupied by what page.
-     */
-     private static PageId[] pid;
-    
-    /**
-     * Read lock on the corresponding page.
-     * <p>
-     * When a trasaction need to read a page, it have to acquire a readLock on
-     * that page. There can be more than one reader reading a specified page. 
-     */
-    //private static int[] readLock;
-   
-    /**
-     * Write lock on the corresponding page.
-     * <p>
-     * When a trasaction need to write a page, it have to acquire a writeLock on
-     * that page. If there are readers reading that page, the writer have to waite
-     * until all readings are done. And there is at most one wirter is writing the
-     * page at some time.
-     */
-    //private static boolean[] writeLock;
-    
 
-
+    /**
+     * A frame in the buffer pool holds a page that have been retrived
+     * from the disk.
+     */
+    public class Frame{
+      private Page frame;
+     /**
+      * Keeps track of the times of the corresponding page being reference.
+      */
+      private int pinCount;
+     /**
+      * Keeps track of which slot is occupied by what page.
+      */
+      private static PageId pid;
+     /**
+      * Keeps track of all of the trasations that hold this page.
+      */ 
+      private LinkedList<TrasactionId> traid; 
+      /**
+       * Construct a frame of the buffer pool.
+       * @param frame the page that will occupy this frame.
+       * @param tid the transaction identifier that want to hold this frame.
+       */
+      public Frame(Page frame, TransactionId tid){
+	this.frame = frame;
+	this.pinCount = 0; 
+        this.pid = frame.getId(); 
+        this.traid = new LinkedList<TractionId>(); 
+	if(traid != null){
+	  this.traid.add(tid);
+	}
+      }
+      /**
+       * Add a transaction identifier that want to hold this frame.
+       * @param tid the transation identifier that want to hold this frame.
+       */
+      public void addTransactionId(TransactionId tid){
+	if(tid != null){
+	  this.traid.add(tid);
+	} else{
+	  Debug.log("!!!warning: a 'null' transation ID is going to get a page. Adding refused."); 
+	}
+      }
+    }
+   
+    /**
+     * The frame pool of this buffer. There is only frame pool in a database.
+     */
+    private static Frame[] _pool;
+   
     /**
      * Creates a BufferPool that caches up to numPages pages.
      *
@@ -68,15 +81,7 @@ public class BufferPool {
         // some code goes here
 
  	// Create a page pool to hold pages.
-        _pool = new Page[numPages]; 
-
- 	pid= new PageId[numPages];
-	// Create an array to keep the pincount information for the page pool.
-	pinCount = new int[numPages];
-       	dirty = new boolean[numPages];
-        // lock is not implemented in Proj1
- 	//readLock = new int[numPages];
-	//writeLock = new boolean[numPages];	 	
+        _pool = new Frame[numPages]; 
 
     }
 
