@@ -3,6 +3,7 @@ package simpledb;
 import java.io.*;
 
 import java.util.LinkedList;
+import java.util.HashTable;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from
@@ -39,28 +40,33 @@ public class BufferPool {
      /**
       * Keeps track of all of the trasations that hold this page.
       */ 
-      private LinkedList<TrasactionId> traid; 
+      private LinkedList<Transaction> traid; 
+       
       /**
        * Construct a frame of the buffer pool.
        * @param frame the page that will occupy this frame.
        * @param tid the transaction identifier that want to hold this frame.
+       * @param pms the permission of the current transaction.
        */
-      public Frame(Page frame, TransactionId tid){
+      public Frame(Page frame, TransactionId tid, Permissions pms){
 	this.frame = frame;
 	this.pinCount = 0; 
         this.pid = frame.getId(); 
-        this.traid = new LinkedList<TractionId>(); 
+        Transaction tas = new Transaction(tid, pms);
+        this.traid = new LinkedList<Transaction>(); 
 	if(traid != null){
-	  this.traid.add(tid);
+	  this.traid.add(tas);
 	}
       }
       /**
        * Add a transaction identifier that want to hold this frame.
        * @param tid the transation identifier that want to hold this frame.
+       * @param pms the permmsion of the current transaction. 'null' is ok.
        */
-      public void addTransactionId(TransactionId tid){
+      public void addTransaction(TransactionId tid, Permissions pms){
 	if(tid != null){
-	  this.traid.add(tid);
+	  Transaction tas = new Transaction(tid, pms);
+	  this.traid.add(tas);
 	} else{
 	  Debug.log("!!!warning: a 'null' transation ID is going to get a page. Adding refused."); 
 	}
@@ -70,7 +76,15 @@ public class BufferPool {
     /**
      * The frame pool of this buffer. There is only frame pool in a database.
      */
-    private static Frame[] _pool;
+    private static HashTable<PageId, Frame> pool;
+    /**
+     * Keeps track of which slot is holding a specific page.
+     */
+    private static PageId[] slots;
+    /**
+     * The maximum number of frames in this buffer.
+     */
+    private static final int capacity;
    
     /**
      * Creates a BufferPool that caches up to numPages pages.
@@ -81,8 +95,9 @@ public class BufferPool {
         // some code goes here
 
  	// Create a page pool to hold pages.
-        _pool = new Frame[numPages]; 
-
+        pool = new HashTable<PageId, Frame>();
+        capacity = numPages;
+	slots = new PageId[capacity];
     }
 
     /**
@@ -103,8 +118,49 @@ public class BufferPool {
     public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
         throws TransactionAbortedException, DbException {
         // some code goes here
+	if(pool.containsKey(pid)){
+	  Frame frm = pool.get(pid);
+	  // do some lock check and permission check. Not necessary for pj1
+	  frm.addTransaction(tid, perm);
+	  frm.pinCount++;
+	  return frm.frame; 
+  	} else {
+	  Page pgSwap, pgNew;
+	  Catalog syscal = DataBase.getCatalog();
+	  pgNew = syscal.getDbFile(pid.getTableId()).readPage(pid);
+	  if(this.capacity == pool.size()){
+	    pgSwap = clockReplacer();
+	    try{
+	      flushPage(pgSwap.getId());
+            } catch (IOException ioe) {
+	      ioe.printStaticTrace();
+            } 
+	    if(pool.remove(pgSwap.getId()) == null){
+	      Debug.log("!!!warning: PageId \'" + pgSwap.getId().toString()
+	     	+"\' does not exist in the buffer poll, but need to be removed."); 
+	    }  
+	  }
+	  pool.put(pid, new Frame(pgNew, tid, perm));   
+	  return pgNew;
+	}
         
         
+    }
+    /**
+     * Find a non-referenced frame in this buffer pool and return it. 
+     * In this replacer, we use a clock strategy. Only and only if the
+     * buffer pool is fully occupied the replacer would return a page for
+     * replacing, fail to return a page for replacing otherwise.
+     */
+    private Page clockReplacer(){
+	if(this.capacity == pool.size){
+	  boolean   
+	} else {
+	  // the program should never get here.
+	  Debug.log("!!!warning: the replacer is malfunctioning. There still"
+		+ " has unused frame but the buffer manager seems to hunt for "
+		+ "a page for replacing.");
+	}
     }
 
     /**
