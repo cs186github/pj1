@@ -22,6 +22,25 @@ public class BufferPool {
     other classes. BufferPool should use the numPages argument to the
     constructor instead. */
     public static final int DEFAULT_PAGES = 50;
+ 
+    /**
+     * Indicates a certain slot is available, that is the slot is not occupied
+     * by a page.
+     */
+    public static final int AVAILABLE = 0;
+    /**
+     * Indicates a certain slot is refrenced at least once.
+     */
+    public static final int REFERENCED = 1;
+    /**
+     * Indicates a certain slot has ever been referenced and is not been 
+     * referenced now. It is waiting for rereferenced.
+     */
+    public static final int WAITING = 2;
+    /**
+     * This is used in the clock replace algorithm.
+     */
+    private static final int CLOCKON = 3;
 
     /**
      * A frame in the buffer pool holds a page that have been retrived
@@ -33,10 +52,6 @@ public class BufferPool {
       * Keeps track of the times of the corresponding page being reference.
       */
       private int pinCount;
-     /**
-      * Keeps track of which slot is occupied by what page.
-      */
-      private static PageId pid;
      /**
       * Keeps track of all of the trasations that hold this page.
       */ 
@@ -51,7 +66,6 @@ public class BufferPool {
       public Frame(Page frame, TransactionId tid, Permissions pms){
 	this.frame = frame;
 	this.pinCount = 0; 
-        this.pid = frame.getId(); 
         Transaction tas = new Transaction(tid, pms);
         this.traid = new LinkedList<Transaction>(); 
 	if(traid != null){
@@ -85,6 +99,11 @@ public class BufferPool {
      * The maximum number of frames in this buffer.
      */
     private static final int capacity;
+    /**
+     * Indicates the state of a slot. There are three states: 'AVAILABLE',
+     * 'REFERENCED', 'WAITING', 'CLOCKON' in all. 
+     */
+    private static int state[];
    
     /**
      * Creates a BufferPool that caches up to numPages pages.
@@ -98,6 +117,8 @@ public class BufferPool {
         pool = new HashTable<PageId, Frame>();
         capacity = numPages;
 	slots = new PageId[capacity];
+        // this should be initialized atomatically to zeros.
+        state = new int[capacity]; 
     }
 
     /**
@@ -118,49 +139,94 @@ public class BufferPool {
     public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
         throws TransactionAbortedException, DbException {
         // some code goes here
+	Page pgNew;
+
 	if(pool.containsKey(pid)){
 	  Frame frm = pool.get(pid);
 	  // do some lock check and permission check. Not necessary for pj1
 	  frm.addTransaction(tid, perm);
 	  frm.pinCount++;
-	  return frm.frame; 
+          pgNew = frm.frame; 
+
   	} else {
-	  Page pgSwap, pgNew;
-	  Catalog syscal = DataBase.getCatalog();
-	  pgNew = syscal.getDbFile(pid.getTableId()).readPage(pid);
+	  Page pgSwap;
+	  // If the buffer pool is full, maybe need replacing.
 	  if(this.capacity == pool.size()){
 	    pgSwap = clockReplacer();
-	    try{
-	      flushPage(pgSwap.getId());
-            } catch (IOException ioe) {
-	      ioe.printStaticTrace();
-            } 
-	    if(pool.remove(pgSwap.getId()) == null){
-	      Debug.log("!!!warning: PageId \'" + pgSwap.getId().toString()
-	     	+"\' does not exist in the buffer poll, but need to be removed."); 
+	    // if there is not a proper page to be replaced, just forget it.
+	    if(pgSwap != null){
+	      try{
+	        flushPage(pgSwap.getId());
+              } catch (IOException ioe) {
+	        ioe.printStaticTrace();
+              } 
+	      if(pool.remove(pgSwap.getId()) == null){
+	        Debug.log("!!!warning: PageId \'" + pgSwap.getId().toString()
+	     	  +"\' does not exist in the buffer poll, but need to be removed."); 
+	      }
+	    
+	      // update state and slots info
+	      int i = 0;
+	      while(i < this.capacity){
+	        if(state[i] == CLOCKON){
+	       	  state[i] = REFERENCED;
+		  slots[i] = pid;
+		  break;
+	        }
+	        i++;
+	      } 
+	    } else {
+	      return null;
 	    }  
+	  } else {
+	    // update the state and slots info.
+	    int i = 0;
+	    while(i < this.capacity){
+	      if(state[i] == AVAILABLE){
+		state[i] = REFERENCED;
+		slots[i] = pid;
+		break;
+	      }
+	      i++;
+	    }
 	  }
+	  // Read the page.
+	  Catalog syscal = DataBase.getCatalog();
+	  pgNew = syscal.getDbFile(pid.getTableId()).readPage(pid);
 	  pool.put(pid, new Frame(pgNew, tid, perm));   
-	  return pgNew;
 	}
-        
-        
+        return pgNew; 
     }
     /**
      * Find a non-referenced frame in this buffer pool and return it. 
      * In this replacer, we use a clock strategy. Only and only if the
      * buffer pool is fully occupied the replacer would return a page for
      * replacing, fail to return a page for replacing otherwise.
+     * @return the page for replacing. If no candidates, return null.
      */
     private Page clockReplacer(){
 	if(this.capacity == pool.size){
-	  boolean   
+	  int i = 0;
+	  while(i < this.capacity){
+	    if((slots[i] != null) && ((pool.get(slots[i])).pinCount == 0)){
+	      state[i] = WAITING;
+	    }
+	    i++;
+	  }
+	  i = 0;
+	  while(i < this.capacity){
+	    if(state[i] == WAITING){
+	      state[i] = CLOCKON;
+	      return (pool.get(slots[i])).frame;  
+	    }
+	  }  
 	} else {
 	  // the program should never get here.
 	  Debug.log("!!!warning: the replacer is malfunctioning. There still"
 		+ " has unused frame but the buffer manager seems to hunt for "
 		+ "a page for replacing.");
 	}
+	return null;
     }
 
     /**
