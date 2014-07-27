@@ -15,7 +15,7 @@ public class Transaction{
   public TransactionId getId(){
     return tid;
   }
-  public Permissions getPermission{
+  public Permissions getPermission(){
     return pms;
   }
 }

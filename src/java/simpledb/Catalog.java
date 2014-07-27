@@ -45,7 +45,7 @@ public class Catalog {
     *		(5)The number of slots of a heap page.
     * <p>
     */ 
-   public static class CatalogHeap extends CatalogEntry{
+   public class CatalogHeap extends CatalogEntry{
     /**
      * Specify a unique entry in the system catalog. For each entry in a catalog
      * this item should be unique. 
@@ -112,8 +112,6 @@ public class Catalog {
        */
       public String toString(){
         return "This feature has not been implemented yet.\n";
-          
-        
       }
      
     
@@ -253,8 +251,6 @@ public class Catalog {
        } else{
          return cah.entryName;
        }
-
-
     }
     
     /** Delete all tables from the catalog */
@@ -333,7 +329,7 @@ public class Catalog {
         } catch (IndexOutOfBoundsException e) {
             System.out.println ("Invalid catalog entry : " + line);
             System.exit(0);
-        }
+        }//end try
     }
 }
 

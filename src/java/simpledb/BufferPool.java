@@ -3,7 +3,7 @@ package simpledb;
 import java.io.*;
 
 import java.util.LinkedList;
-import java.util.HashTable;
+import java.util.Hashtable;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from
@@ -90,7 +90,7 @@ public class BufferPool {
     /**
      * The frame pool of this buffer. There is only frame pool in a database.
      */
-    private static HashTable<PageId, Frame> pool;
+    private static Hashtable<PageId, Frame> pool;
     /**
      * Keeps track of which slot is holding a specific page.
      */
@@ -98,7 +98,7 @@ public class BufferPool {
     /**
      * The maximum number of frames in this buffer.
      */
-    private static final int capacity;
+    private static int capacity;
     /**
      * Indicates the state of a slot. There are three states: 'AVAILABLE',
      * 'REFERENCED', 'WAITING', 'CLOCKON' in all. 
@@ -114,7 +114,7 @@ public class BufferPool {
         // some code goes here
 
  	// Create a page pool to hold pages.
-        pool = new HashTable<PageId, Frame>();
+        pool = new Hashtable<PageId, Frame>();
         capacity = numPages;
 	slots = new PageId[capacity];
         // this should be initialized atomatically to zeros.
@@ -158,7 +158,7 @@ public class BufferPool {
 	      try{
 	        flushPage(pgSwap.getId());
               } catch (IOException ioe) {
-	        ioe.printStaticTrace();
+	        ioe.printStackTrace();
               } 
 	      if(pool.remove(pgSwap.getId()) == null){
 	        Debug.log("!!!warning: PageId \'" + pgSwap.getId().toString()
@@ -191,7 +191,7 @@ public class BufferPool {
 	    }
 	  }
 	  // Read the page.
-	  Catalog syscal = DataBase.getCatalog();
+	  Catalog syscal = Database.getCatalog();
 	  pgNew = syscal.getDbFile(pid.getTableId()).readPage(pid);
 	  pool.put(pid, new Frame(pgNew, tid, perm));   
 	}
@@ -205,7 +205,7 @@ public class BufferPool {
      * @return the page for replacing. If no candidates, return null.
      */
     private Page clockReplacer(){
-	if(this.capacity == pool.size){
+	if(this.capacity == pool.size()){
 	  int i = 0;
 	  while(i < this.capacity){
 	    if((slots[i] != null) && ((pool.get(slots[i])).pinCount == 0)){
