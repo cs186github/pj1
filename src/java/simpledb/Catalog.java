@@ -347,7 +347,9 @@ public class Catalog {
         } catch (IndexOutOfBoundsException e) {
             System.out.println ("Invalid catalog entry : " + line);
             System.exit(0);
-        }//end try
+        } finally{
+        	
+        }
     }
 }
 

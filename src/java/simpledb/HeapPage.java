@@ -276,8 +276,8 @@ public class HeapPage implements Page {
         // some code goes here
         // return 0;
         int count = 0;
-	for(int i = 0; i < numSlots; i++){
-	  count = isSlotUsed(i) ? ++count : count;
+	for(int i = 0; i < numSlots; ++i){
+	  count = !isSlotUsed(i) ? ++count : count;
 	}
 	return count;
     }
@@ -293,10 +293,10 @@ public class HeapPage implements Page {
 	//    System.out.printf("%2x  ", i);
 	int slot = 0;
 	int offset = 0;
-	offset = i / 8;
+	offset = i % 8;
 	slot = (i - offset)/8;
 	byte tmp = header[slot];
-	return (((tmp >> offset) << 7) == ((byte)1));
+	return ((tmp << (7-offset)) >> 7) == 1;
     }
 
 
@@ -315,7 +315,22 @@ public class HeapPage implements Page {
     public Iterator<Tuple> iterator() {
         // some code goes here
         // return null;
-	return (Iterator<Tuple>) Arrays.asList(tuples).iterator();
+	// this is wrong!!!!
+	// return ((List<Tuple>) Arrays.asList(tuples)).iterator();
+	class TupleIterator implements Iterator<Tuple>{
+	  private int index = 0;
+	  public Tuple next(){
+		return tuples[index++];
+
+	  } 
+	  public boolean hasNext(){
+		return index < tuples.length;
+	  }
+	  public void remove(){
+	    throw new UnsupportedOperationException("remove operation on iterator is not implemented.");
+	  }
+	}
+	return new TupleIterator();
     }
 
 }

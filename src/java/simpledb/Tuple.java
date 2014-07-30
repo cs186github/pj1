@@ -118,7 +118,7 @@ public class Tuple implements Serializable {
     public Iterator<Field> fields()
     {
         // some code goes here
-        class FieldIterator implements Iterator{
+        class FieldIterator implements Iterator<Field>{
           int loc = 0; 
           public boolean hasNext(){
             return loc < fields.length;
