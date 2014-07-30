@@ -66,8 +66,7 @@ public class HeapPage implements Page {
     */
     private int getNumTuples() {        
         // some code goes here
-        return 0;
-
+	return (Database.getCatalog().getHAS(pid.getTableId()))[1];
     }
 
     /**
@@ -77,7 +76,8 @@ public class HeapPage implements Page {
     private int getHeaderSize() {        
         
         // some code goes here
-        return 0;
+        // return 0;
+	return (Database.getCatalog().getHAS(pid.getTableId()))[0];
                  
     }
     
@@ -103,7 +103,8 @@ public class HeapPage implements Page {
      */
     public HeapPageId getId() {
     // some code goes here
-    throw new UnsupportedOperationException("implement this");
+    // throw new UnsupportedOperationException("implement this");
+	return pid;
     }
 
     /**
@@ -273,7 +274,12 @@ public class HeapPage implements Page {
      */
     public int getNumEmptySlots() {
         // some code goes here
-        return 0;
+        // return 0;
+        int count = 0;
+	for(int i = 0; i < numSlots; i++){
+	  count = isSlotUsed(i) ? ++count : count;
+	}
+	return count;
     }
 
     /**
@@ -281,8 +287,16 @@ public class HeapPage implements Page {
      */
     public boolean isSlotUsed(int i) {
         // some code goes here
-        return false;
+        // return false;
+ 	// JVM use a big-endian strategy.
+	int slot = 0;
+	int offset = 0;
+	offset = i / 8;
+	slot = (i - offset)/8;
+	byte tmp = header[slot];
+	return (((tmp << offset) >> 7) == ((byte)1));
     }
+
 
     /**
      * Abstraction to fill or clear a slot on this page.
@@ -298,7 +312,8 @@ public class HeapPage implements Page {
      */
     public Iterator<Tuple> iterator() {
         // some code goes here
-        return null;
+        // return null;
+	return (Iterator<Tuple>) Arrays.asList(tuples).iterator();
     }
 
 }

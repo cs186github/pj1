@@ -190,6 +190,24 @@ public class Catalog {
         throw new NoSuchElementException("no such table named " + name + " in the system catalog.");
  	 
     }
+    /**
+     * Return the page info of the pages in the specified table.
+     * The first item is the length of the page header, the second item 
+     * is the number of slots of a page.
+     * @param tid the table identifier.
+     * @return the page info of the pages in the specified table.
+     */
+    public int[] getHAS(int tid) throws NoSuchElementException{
+	int[] HAS = new int[2];
+	CatalogHeap cah= (CatalogHeap) catalog.get(Integer.valueOf(tid));
+        if(cah == null){
+          throw new NoSuchElementException("no such table in the system catalog. The tableid is: " + String.valueOf(tid));
+        } else{
+	  HAS[0] = cah.headerLen;
+	  HAS[1] = cah.numSlots;
+	  return HAS;
+       }
+    }
 
     /**
      * Returns the tuple descriptor (schema) of the specified table
