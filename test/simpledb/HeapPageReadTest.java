@@ -58,6 +58,7 @@ public class HeapPageReadTest extends SimpleDbTestBase {
             File temp = File.createTempFile("table", ".dat");
             temp.deleteOnExit();
             HeapFileEncoder.convert(table, temp, BufferPool.PAGE_SIZE, 2);
+	    // System.out.println(temp.getAbsolutePath());
             EXAMPLE_DATA = TestUtil.readFileBytes(temp.getAbsolutePath());
         } catch (IOException e) {
             throw new RuntimeException(e);

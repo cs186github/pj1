@@ -289,12 +289,14 @@ public class HeapPage implements Page {
         // some code goes here
         // return false;
  	// JVM use a big-endian strategy.
+	//for(byte j: header)
+	//    System.out.printf("%2x  ", i);
 	int slot = 0;
 	int offset = 0;
 	offset = i / 8;
 	slot = (i - offset)/8;
 	byte tmp = header[slot];
-	return (((tmp << offset) >> 7) == ((byte)1));
+	return (((tmp >> offset) << 7) == ((byte)1));
     }
 
 

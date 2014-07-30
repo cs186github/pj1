@@ -22,9 +22,7 @@ public class HeapFileEncoder {
    * @see HeapPage
    * @see HeapFile
    * @param tuples the tuples - a list of tuples, each represented by a list of integers that are
-   *        the field values for that tuple.
-   * @param outFile The output file to write data to
-   * @param npagebytes The number of bytes per page in the output file
+   *        the field values for that tuple.  * @param outFile The output file to write data to * @param npagebytes The number of bytes per page in the output file
    * @param numFields the number of fields in each input tuple
    * @throws IOException if the temporary/output file can't be opened
    */
@@ -90,7 +88,8 @@ public class HeapFileEncoder {
   public static void convert(File inFile, File outFile, int npagebytes,
                  int numFields, Type[] typeAr, char fieldSeparator)
       throws IOException {
-
+ 
+      // bytes per record. 
       int nrecbytes = 0;
       for (int i = 0; i < numFields ; i++) {
           nrecbytes += typeAr[i].getLen();
@@ -124,12 +123,16 @@ public class HeapFileEncoder {
     boolean first = true;
     while (!done) {
         int c = br.read();
+	// System.out.println((char)c);
         
         // Ignore Windows/Notepad special line endings
-        if (c == '\r')
+        if (c == '\r'){
+	    //System.out.println("read a white space.");
             continue;
+	}
 
         if (c == '\n') {
+	    //System.out.println("read a new line");
             if (first)
                 continue;
             recordcount++;
@@ -137,7 +140,10 @@ public class HeapFileEncoder {
         } else
             first = false;
         if (c == fieldSeparator || c == '\n' || c == '\r') {
+	    // System.out.print("curpos is " + curpos + " ");
             String s = new String(buf, 0, curpos);
+	    // System.out.println("s is " + s);
+	    
             if (typeAr[fieldNo] == Type.INT_TYPE) {
                 try {
                     pageStream.writeInt(Integer.parseInt(s.trim()));
@@ -145,7 +151,7 @@ public class HeapFileEncoder {
                     System.out.println ("BAD LINE : " + s);
                 }
             }
-            else   if (typeAr[fieldNo] == Type.STRING_TYPE) {
+            else if (typeAr[fieldNo] == Type.STRING_TYPE) {
                 s = s.trim();
                 int overflow = Type.STRING_LEN - s.length();
                 if (overflow < 0) {
