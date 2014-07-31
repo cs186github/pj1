@@ -29,7 +29,8 @@ public class HeapFileEncoder {
   public static void convert(ArrayList<ArrayList<Integer>> tuples, File outFile, int npagebytes, int numFields) throws IOException {
       File tempInput = File.createTempFile("tempTable", ".txt");
       tempInput.deleteOnExit();
-      BufferedWriter bw = new BufferedWriter(new FileWriter(tempInput));
+      @SuppressWarnings("resource")
+	  BufferedWriter bw = new BufferedWriter(new FileWriter(tempInput));
       for (ArrayList<Integer> tuple : tuples) {
           int writtenFields = 0;
           for (Integer field : tuple) {

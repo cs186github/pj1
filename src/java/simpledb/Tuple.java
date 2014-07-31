@@ -11,6 +11,7 @@ import java.util.Iterator;
  *
  * We use an array to hold the fields. It is allocated by calling constructor.
  */
+@SuppressWarnings("unused")
 public class Tuple implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -106,7 +107,15 @@ public class Tuple implements Serializable {
      */
     public String toString() {
         // some code goes here
-        throw new UnsupportedOperationException("Implement this");
+        // throw new UnsupportedOperationException("Implement this");
+ 	StringBuilder result = new StringBuilder();
+	for(Field f: fields){
+	  result.append(f.toString());
+	  result.append('\t');
+	}
+	result.delete(fields.length-1, fields.length);		
+	result.append('\n');
+	return result.toString();
     }
     
     /**
@@ -114,7 +123,6 @@ public class Tuple implements Serializable {
      *        An iterator which iterates over all the fields of this tuple
      * */
     
-    @SuppressWarnings("unchecked")
     public Iterator<Field> fields()
     {
         // some code goes here

@@ -169,7 +169,8 @@ public class TestUtil {
     /**
      * @return a byte array containing the contents of the file 'path'
      */
-    public static byte[] readFileBytes(String path) throws IOException {
+    @SuppressWarnings("resource")
+	public static byte[] readFileBytes(String path) throws IOException {
         File f = new File(path);
         InputStream is = new FileInputStream(f);
         byte[] buf = new byte[(int) f.length()];
@@ -193,7 +194,8 @@ public class TestUtil {
     /**
      * Stub DbFile class for unit testing.
      */
-    public static class SkeletonFile implements DbFile {
+    @SuppressWarnings("serial")
+	public static class SkeletonFile implements DbFile {
         private int tableid;
         private TupleDesc td;
 
@@ -244,7 +246,8 @@ public class TestUtil {
     /**
      * Mock SeqScan class for unit testing.
      */
-    public static class MockScan implements DbIterator {
+    @SuppressWarnings("serial")
+	public static class MockScan implements DbIterator {
         private int cur, low, high, width;
 
         /**

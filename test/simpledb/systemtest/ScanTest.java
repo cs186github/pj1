@@ -1,7 +1,6 @@
 package simpledb.systemtest;
 
 import simpledb.systemtest.SystemTestUtil;
-
 import static org.junit.Assert.*;
 
 import java.io.File;
@@ -20,6 +19,7 @@ import simpledb.*;
  * args[1] is the number of columns.  E.g., if it's 5, then ScanTest will end
  * up dumping the contents of f4.0.txt.
  */
+@SuppressWarnings("unused")
 public class ScanTest extends SimpleDbTestBase {
     private final static Random r = new Random();
 
@@ -73,7 +73,8 @@ public class ScanTest extends SimpleDbTestBase {
      * @throws DbException */
     @Test public void testCache() throws IOException, DbException, TransactionAbortedException {
         /** Counts the number of readPage operations. */
-        class InstrumentedHeapFile extends HeapFile {
+        @SuppressWarnings("serial")
+		class InstrumentedHeapFile extends HeapFile {
             public InstrumentedHeapFile(File f, TupleDesc td) {
                 super(f, td);
             }

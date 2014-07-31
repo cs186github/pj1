@@ -291,19 +291,31 @@ public class HeapPage implements Page {
  	// JVM use a big-endian strategy.
 	//for(byte j: header)
 	//    System.out.printf("%2x  ", i);
+	if(i < 0 || i >= this.numSlots)
+	  return false; 
 	int slot = 0;
 	int offset = 0;
 	offset = i % 8;
 	slot = (i - offset)/8;
-	byte tmp = header[slot];
-	return ((tmp << (7-offset)) >> 7) == 1;
+	int tmp =(int) header[slot];
+	//System.out.printf("(Before)tmp is %x ", tmp);
+	//tmp = (byte) (tmp << (7-offset));
+	//tmp = tmp << 31-offset;
+	//System.out.printf("(After)tmp is %x ", tmp);
+	//tmp = (byte) (tmp >> 7);
+	//tmp = tmp >>> 31;
+	//System.out.printf("(After)tmp is %x ", tmp);
+	//boolean result = (tmp == 1);
+	return (((tmp << 31-offset) >>> 31) == 1);
+	//return ((tmp << (7-offset)) >> 7) == 1;
     }
 
 
     /**
      * Abstraction to fill or clear a slot on this page.
      */
-    private void markSlotUsed(int i, boolean value) {
+    @SuppressWarnings("unused")
+	private void markSlotUsed(int i, boolean value) {
         // some code goes here
         // not necessary for lab1
     }
@@ -311,6 +323,7 @@ public class HeapPage implements Page {
     /**
      * @return an iterator over all tuples on this page (calling remove on this iterator throws an UnsupportedOperationException)
      * (note that this iterator shouldn't return tuples in empty slots!)
+     * 
      */
     public Iterator<Tuple> iterator() {
         // some code goes here
@@ -319,16 +332,31 @@ public class HeapPage implements Page {
 	// return ((List<Tuple>) Arrays.asList(tuples)).iterator();
 	class TupleIterator implements Iterator<Tuple>{
 	  private int index = 0;
+	  private Tuple[] uetus;
+	  TupleIterator(){
+	    uetus = new Tuple[numSlots - getNumEmptySlots()];
+	    int uepos = 0;
+	    for(int i = 0; i < tuples.length; i++){
+		if(isSlotUsed(i)){
+		  uetus[uepos++] = tuples[i];
+    	    }
+	  }
+
+	  }
 	  public Tuple next(){
-		return tuples[index++];
+    	    return tuples[index++];
 
 	  } 
 	  public boolean hasNext(){
-		return index < tuples.length;
+		return index < uetus.length;
+	  }
+	  public Iterator<Tuple> reset(){
+		return new this();
 	  }
 	  public void remove(){
 	    throw new UnsupportedOperationException("remove operation on iterator is not implemented.");
 	  }
+	  
 	}
 	return new TupleIterator();
     }

@@ -13,6 +13,7 @@ import java.util.*;
  * @see simpledb.HeapPage#HeapPage
  * @author Sam Madden
  */
+@SuppressWarnings("serial")
 public class HeapFile implements DbFile {
 
     /**

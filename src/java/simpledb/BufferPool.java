@@ -1,7 +1,6 @@
 package simpledb;
 
 import java.io.*;
-
 import java.util.LinkedList;
 import java.util.Hashtable;
 
@@ -29,7 +28,7 @@ public class BufferPool {
      */
     public static final int AVAILABLE = 0;
     /**
-     * Indicates a certain slot is refrenced at least once.
+     * Indicates a certain slot is referenced at least once.
      */
     public static final int REFERENCED = 1;
     /**
@@ -43,7 +42,7 @@ public class BufferPool {
     private static final int CLOCKON = 3;
 
     /**
-     * A frame in the buffer pool holds a page that have been retrived
+     * A frame in the buffer pool holds a page that have been retrieved
      * from the disk.
      */
     public class Frame{
@@ -53,7 +52,7 @@ public class BufferPool {
       */
       private int pinCount;
      /**
-      * Keeps track of all of the trasations that hold this page.
+      * Keeps track of all of the transactions that hold this page.
       */ 
       private LinkedList<Transaction> traid; 
        
@@ -151,7 +150,7 @@ public class BufferPool {
   	} else {
 	  Page pgSwap;
 	  // If the buffer pool is full, maybe need replacing.
-	  if(this.capacity == pool.size()){
+	  if(BufferPool.capacity == pool.size()){
 	    pgSwap = clockReplacer();
 	    // if there is not a proper page to be replaced, just forget it.
 	    if(pgSwap != null){
@@ -167,7 +166,7 @@ public class BufferPool {
 	    
 	      // update state and slots info
 	      int i = 0;
-	      while(i < this.capacity){
+	      while(i < BufferPool.capacity){
 	        if(state[i] == CLOCKON){
 	       	  state[i] = REFERENCED;
 		  slots[i] = pid;
@@ -181,7 +180,7 @@ public class BufferPool {
 	  } else {
 	    // update the state and slots info.
 	    int i = 0;
-	    while(i < this.capacity){
+	    while(i < BufferPool.capacity){
 	      if(state[i] == AVAILABLE){
 		state[i] = REFERENCED;
 		slots[i] = pid;
@@ -205,16 +204,16 @@ public class BufferPool {
      * @return the page for replacing. If no candidates, return null.
      */
     private Page clockReplacer(){
-	if(this.capacity == pool.size()){
+	if(BufferPool.capacity == pool.size()){
 	  int i = 0;
-	  while(i < this.capacity){
+	  while(i < BufferPool.capacity){
 	    if((slots[i] != null) && ((pool.get(slots[i])).pinCount == 0)){
 	      state[i] = WAITING;
 	    }
 	    i++;
 	  }
 	  i = 0;
-	  while(i < this.capacity){
+	  while(i < BufferPool.capacity){
 	    if(state[i] == WAITING){
 	      state[i] = CLOCKON;
 	      return (pool.get(slots[i])).frame;  
@@ -353,7 +352,8 @@ public class BufferPool {
      * Discards a page from the buffer pool.
      * Flushes the page to disk to ensure dirty pages are updated on disk.
      */
-    private synchronized  void evictPage() throws DbException {
+    @SuppressWarnings("unused")
+	private synchronized  void evictPage() throws DbException {
         // some code goes here
         // not necessary for proj1
     }

@@ -17,3 +17,6 @@ msg.tmp
 /lib
 /javadoc
 log
+.classpath
+.project
+/bin

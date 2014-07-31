@@ -107,7 +107,7 @@ Part III: class specifications
          |-------------------------------
          | tuple 2| ...|(empty part) 0 0|
          --------------------------------
-The length of header part and the number of slots in this page is stored in the corresponding system catalog entry. ??How to maintain the dirty information of a page. 
+The length of header part and the number of slots in this page is stored in the corresponding system catalog entry. ??How to maintain the dirty information of a page. The tuple iterator maintains a tuple references array by itself when it is created. So the followed adding and deleting will not affect this iterator. The recommended solution is to reset the iterator when it is used next time. 
 
          HeapPageId pid : the identifier of this page. <TableId, pageNo> 
          TupleDesc td : td should reference a copy of the corresponding table TupleDesc in the system catalog. That way there is little chance to change it unexpectedly.

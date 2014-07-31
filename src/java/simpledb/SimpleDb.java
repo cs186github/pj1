@@ -2,6 +2,7 @@ package simpledb;
 import java.util.*;
 import java.io.*;
 
+@SuppressWarnings("unused")
 public class SimpleDb {
     public static void main (String args[])
             throws DbException, TransactionAbortedException, IOException {

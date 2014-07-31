@@ -50,7 +50,8 @@ public class Catalog {
      * Specify a unique entry in the system catalog. For each entry in a catalog
      * this item should be unique. 
       */
-     private int entryId; 
+     @SuppressWarnings("unused")
+	private int entryId; 
      /**
       * Specify a name for this catalog entry.
       */
@@ -67,7 +68,8 @@ public class Catalog {
      /**
       * The number of pages this table has.
       */
-     private int numPage;
+     @SuppressWarnings("unused")
+	private int numPage;
      /**
       * The length of header part in a HeapPage, Caculated by bytes.
       */
@@ -299,7 +301,8 @@ public class Catalog {
      *
      * @param catalogFile
      */
-    public void loadSchema(String catalogFile) {
+    @SuppressWarnings("resource")
+	public void loadSchema(String catalogFile) {
         String line = "";
         String baseFolder=new File(catalogFile).getParent();
         try {

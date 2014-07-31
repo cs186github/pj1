@@ -20,7 +20,13 @@ the but source is very hard to track down. So when you get a parameter of
 a method, if neccessary, get it checked. And the bottum line is whenever you
 need to use a method or a field of a object, check whether that reference
 'null' or not.
-  2> 
+  2> Bitwise operation. The bitwise operation in java have a cast machnism
+to process the operands. If a double is met, then the operands is cast to double.
+Then if a float is met, the operands is cast to float. Then if a long is met, the operands
+is cast to long. Otherwise to int. Before I do bitwise operations on byte
+type variable, I should cast the variable to an integer variable, then do
+the operation. If I do not do this by myself, then the compiler will do it
+for you. Just be confused. See also HeapPage class of method isSlotUsed().
 Part IV: About design
   Design is the most important part of the entire project since it decide
 the heart of it. What contributes a good design is having a good performance,

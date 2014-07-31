@@ -3,6 +3,7 @@ package simpledb;
 import java.io.Serializable;
 
 /** PageId is an interface to a specific page of a specific table. */
+@SuppressWarnings("unused")
 public interface PageId {
 
     /** Return a representation of this page id object as a collection of
