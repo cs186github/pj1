@@ -113,3 +113,90 @@ runtest:
 BUILD SUCCESSFUL
 Total time: 1 second
 Sun Jul 20 09:23:53 CST 2014
+HeapPage is done. Problems we met: bitwise operations.
+Buildfile: /home/darkangle/course_work/cs186/project1/build.xml
+
+compile:
+
+testcompile:
+
+runtest:
+    [junit] Running simpledb.HeapPageReadTest
+    [junit] Testsuite: simpledb.HeapPageReadTest
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.115 sec
+    [junit] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.115 sec
+    [junit] ------------- Standard Output ---------------
+    [junit] ID is []
+    [junit] ID is []
+    [junit] ID is []
+    [junit] 0
+    [junit] tup is 3933	862	
+    [junit] 
+    [junit] 1
+    [junit] tup is 2402	56883	
+    [junit] 
+    [junit] 2
+    [junit] tup is 168	5825	
+    [junit] 
+    [junit] 3
+    [junit] tup is 1876	52278	
+    [junit] 
+    [junit] 4
+    [junit] tup is 650	36090	
+    [junit] 
+    [junit] 5
+    [junit] tup is 3784	43771	
+    [junit] 
+    [junit] 6
+    [junit] tup is 2617	56874	
+    [junit] 
+    [junit] 7
+    [junit] tup is 1209	23253	
+    [junit] 
+    [junit] 8
+    [junit] tup is 5462	24979	
+    [junit] 
+    [junit] 9
+    [junit] tup is 5440	56685	
+    [junit] 
+    [junit] 10
+    [junit] tup is 396	62307	
+    [junit] 
+    [junit] 11
+    [junit] tup is 4569	2719	
+    [junit] 
+    [junit] 12
+    [junit] tup is 2064	43575	
+    [junit] 
+    [junit] 13
+    [junit] tup is 4812	44947	
+    [junit] 
+    [junit] 14
+    [junit] tup is 2189	19724	
+    [junit] 
+    [junit] 15
+    [junit] tup is 3549	36554	
+    [junit] 
+    [junit] 16
+    [junit] tup is 986	53184	
+    [junit] 
+    [junit] 17
+    [junit] tup is 4878	33394	
+    [junit] 
+    [junit] 18
+    [junit] tup is 6778	21122	
+    [junit] 
+    [junit] 19
+    [junit] tup is 1197	16388	
+    [junit] 
+    [junit] ID is []
+    [junit] ------------- ---------------- ---------------
+    [junit] 
+    [junit] Testcase: getId took 0.057 sec
+    [junit] Testcase: getSlot took 0.007 sec
+    [junit] Testcase: testIterator took 0.009 sec
+    [junit] Testcase: getNumEmptySlots took 0.005 sec
+
+BUILD SUCCESSFUL
+Total time: 2 seconds
+Thu Jul 31 12:17:53 CST 2014
